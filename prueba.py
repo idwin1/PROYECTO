@@ -31,7 +31,7 @@ def salir():
 entrada = tk.Entry(ventana,textvar=usuario,width=22,relief="flat",bg=fondo_entrada)
 entrada.place(x=255,y=244)
 
-entrada1 = tk.Entry(ventana,textvar=usuario,width=22,relief="flat",bg=fondo_entrada)
+entrada1 = tk.Entry(ventana,textvar=password,width=22,relief="flat",bg=fondo_entrada)
 entrada1.place(x=255,y=204)
 
 #Botones
