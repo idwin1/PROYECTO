@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk  # Importamos Pillow
 import ast
+import _mysql_connector
 from funcionalidad import seleccionar_opcion
 
 # Crear ventana principal
