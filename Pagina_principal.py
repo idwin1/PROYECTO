@@ -9,7 +9,7 @@ from tkinter import ttk
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title('Buscar_productos')
+root.title('Pagina_Principal')
 root.geometry('925x500+300+200')
 root.configure(bg="#fff")
 root.resizable(False, False)
@@ -47,8 +47,10 @@ for opcion in opciones_menu:
 
 def destruir(texto) :
     root.destroy()
+    print("entro a pagina principal")
     seleccionar_opcion(texto)
-    print("se elimino")
+
     
 # Ejecutar el bucle principal de la aplicación
-root.mainloop()
+def abrir_pagina_principal():
+    root.mainloop()

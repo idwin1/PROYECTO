@@ -25,7 +25,6 @@ opciones_menu = [
     {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
     {"texto": "Usuarios", "icono": "👤"},
     {"texto": "Tareas", "icono": "📝"},
-    {"texto": "Reservas", "icono": "📅"},
     {"texto": "Inventario", "icono": "📦"}
 ]
 

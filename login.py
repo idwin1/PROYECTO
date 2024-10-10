@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk  # Importamos Pillow
 import mysql.connector
+from funcionalidad import seleccionar_opcion
 
 # Crear la ventana principal
 root = Tk()
@@ -71,10 +72,9 @@ code.bind('<FocusIn>', on_enter_pass)
 code.bind('<FocusOut>', on_leave_pass)
 
 Frame(frame, width=295, height=2, bg='black').place(x=25, y=177)
-
 # Guardar datos en las variables y conectarse a la base de datos
 def login():
-
+    texto = "pagina_principal"
     Nom = user.get()  # Guardar nombre de usuario en la variable Nom
     contr = code.get()  # Guardar la contraseña en la variable contr
 
@@ -96,6 +96,8 @@ def login():
 
         if result:
             messagebox.showinfo("Éxito", "Inicio de sesión exitoso.")
+            inicio(texto)
+            
         else:
             messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos.")
 
@@ -107,6 +109,11 @@ def login():
             cursor.close()
             connection.close()
 
+def inicio(texto):
+    root.destroy()
+    seleccionar_opcion(texto)
+    
+
 # Botón para iniciar sesión
 Button(frame, width=39, pady=7, text='Sign in', fg='white', bg='#57a1f8', border=0, command=login).place(x=35, y=204)
 
@@ -117,3 +124,4 @@ sign_up = Button(frame, width=6, text='Sign up', border=0, bg='white', cursor='h
 sign_up.place(x=215, y=270)
 
 root.mainloop()
+

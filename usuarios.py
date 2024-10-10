@@ -9,7 +9,7 @@ from tkinter import ttk
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title('Buscar_productos')
+root.title('Usuarios')
 root.geometry('925x500+300+200')
 root.configure(bg="#fff")
 root.resizable(False, False)
