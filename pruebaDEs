@@ -1,0 +1,34 @@
+from passlib.hash import md5_crypt
+import itertools
+import string
+from tqdm import tqdm
+
+# Hash MD5 Crypt que estás tratando de descifrar
+hash_crypt = "$1$mERr$rAevEMtqM4xHMHOPAc4P60"  # El hash que diste
+
+# Longitud máxima de la contraseña a probar
+max_length = 5
+
+# Posibles caracteres en la contraseña (aquí se usan letras minúsculas y dígitos)
+characters = string.ascii_lowercase + string.digits
+
+# Calcular el total de combinaciones posibles
+total_combinations = sum(len(characters) ** length for length in range(1, max_length + 1))
+
+def brute_force_md5_crypt(hash_crypt):
+    with tqdm(total=total_combinations) as progress_bar:
+        for length in range(1, max_length + 1):
+            for attempt in itertools.product(characters, repeat=length):
+                attempt_password = ''.join(attempt)
+                # Verificar si el hash generado coincide con el hash que diste
+                if md5_crypt.verify(attempt_password, hash_crypt):
+                    return attempt_password
+                progress_bar.update(1)  # Actualizar la barra de progreso
+    return None
+
+# Intentar descifrar
+password = brute_force_md5_crypt(hash_crypt)
+if password:
+    print(f"Contraseña encontrada: {password}")
+else:
+    print("Contraseña no encontrada.")
