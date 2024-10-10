@@ -1,18 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk  # Importamos Pillow
-import mysql.connector
-
+from funcionalidad import seleccionar_opcion
 
 import tkinter as tk
 from tkinter import ttk
 
-def seleccionar_opcion(opcion):
-    print(f"Opción seleccionada: {opcion}")
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title('Buscar Productos')
+root.title('prueba copia')
 root.geometry('925x500+300+200')
 root.configure(bg="#fff")
 root.resizable(False, False)
@@ -47,7 +44,12 @@ for opcion in opciones_menu:
         notificacion.pack(side="right", padx=5)
 
     # Agregar evento para seleccionar opción
-    etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: seleccionar_opcion(texto))
+    etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto))
 
+def destruir(texto) :
+    root.destroy()
+    seleccionar_opcion(texto)
+    print("se elimino")
+    
 # Ejecutar el bucle principal de la aplicación
 root.mainloop()
