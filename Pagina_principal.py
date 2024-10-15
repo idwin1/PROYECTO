@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk  # Importamos Pillow
-from funcionalidad import seleccionar_opcion
 
 import tkinter as tk
 from tkinter import ttk
@@ -46,6 +45,7 @@ for opcion in opciones_menu:
     etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto))
 
 def destruir(texto) :
+    from funcionalidad import seleccionar_opcion
     root.destroy()
     print("entro a pagina principal")
     seleccionar_opcion(texto)

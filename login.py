@@ -1,12 +1,9 @@
-#Primera pagina que se muestra
-#verificar el inicio de sesion
-#Pasar a la pagina de inicio
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk  # Importamos Pillow
 import ast
-import _mysql_connector
-from funcionalidad import seleccionar_opcion
+import mysql.connector
+import os
 
 # Crear ventana principal
 root = Tk()
@@ -15,30 +12,20 @@ root.geometry('925x500+300+200')
 root.configure(bg="#fff")
 root.resizable(False, False)
 
-import os
-
 def signin():
     username = user.get()
     password = code.get()
-    
     # Verificar el archivo de datos
-    file = open('datasheet.txt', 'r')
-    d = file.read()
-    r = ast.literal_eval(d)
-    file.close()
-    
-    if username in r.keys() and password == r[username]:
-        # Cerrar la ventana de login actual
-        root.destroy()
- # Ejecutar el archivo inicio.py
-        archivo_inicio = 'inicio.py'  # Usar solo el nombre del archivo
-        if os.path.exists(archivo_inicio):
-            exec(open(archivo_inicio).read())
-        else:
-            messagebox.showerror('Error', f'No se encontró el archivo {archivo_inicio}')
+    with open('datasheet.txt', 'r') as file:
+        d = file.read()
+        r = ast.literal_eval(d)
+
+    if username in r and password == r[username]:
+        from funcionalidad import seleccionar_opcion  # Importar la función que manejará la selección de opción
+        root.destroy()  # Destruir la ventana de inicio de sesión antes de pasar a la siguiente
+        seleccionar_opcion('pagina_principal')  # Aquí se llama la función que abrirá la nueva ventana
     else:
         messagebox.showerror('Invalida', 'Invalid username or password')
-
 
 # Cargar y redimensionar la imagen con Pillow
 max_width = 400  # Ajusta según lo necesites
@@ -95,11 +82,12 @@ code.bind('<FocusIn>', on_enter)
 code.bind('<FocusOut>', on_leave)
 
 Frame(frame, width=295, height=2, bg='black').place(x=25, y=177)
-# Guardar datos en las variables y conectarse a la base de datos
+
+# Función para iniciar sesión y llamar a la opción correspondiente
 def login():
     texto = "pagina_principal"
-    Nom = user.get()  # Guardar nombre de usuario en la variable Nom
-    contr = code.get()  # Guardar la contraseña en la variable contr
+    Nom = user.get()
+    contr = code.get()
 
     try:
         # Conectar a la base de datos MySQL
@@ -113,17 +101,18 @@ def login():
         cursor = connection.cursor()
 
         # Verificar usuario en la base de datos (ejemplo simple, asegúrate de tener la tabla `usuarios`)
-        query = "SELECT usuario,contrasena FROM usuarios WHERE usuario=%s AND contrasena=%s"
+        query = "SELECT usuario, contrasena FROM usuarios WHERE usuario=%s AND contrasena=%s"
         cursor.execute(query, (Nom, contr))
         result = cursor.fetchone()
 
         if result:
             messagebox.showinfo("Éxito", "Inicio de sesión exitoso.")
-            inicio(texto)
-            
+            from funcionalidad import seleccionar_opcion  # Importar la función que manejará la selección de opción
+            root.destroy()  # Destruir la ventana actual
+            seleccionar_opcion(texto)  # Llamar a la función para abrir la nueva ventana
         else:
             messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos.")
-
+    
     except mysql.connector.Error as err:
         messagebox.showerror("Error", f"Error de conexión: {err}")
 
@@ -132,14 +121,8 @@ def login():
             cursor.close()
             connection.close()
 
-def inicio(texto):
-    root.destroy()
-    seleccionar_opcion(texto)
-    
-
 # Botón para iniciar sesión
 Button(frame, width=39, pady=7, text='Sign in', fg='white', bg='#57a1f8', border=0, command=login).place(x=35, y=204)
 
 # Iniciar el bucle de la ventana
 root.mainloop()
-
