@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import mysql.connector
-
+from login import pedir_ip
 # Función para mostrar la interfaz de inventario en el área central
 def mostrar_inventario(frame_central):
+    
     # Limpiar el contenido actual del área central
     for widget in frame_central.winfo_children():
         widget.destroy()
@@ -47,7 +48,7 @@ def actualizar_tabla(tree):
     # Conectar a la base de datos y obtener los productos
     try:
         conn = mysql.connector.connect(
-            host="localhost",            
+            host=pedir_ip(),            
             user="root",           
             password="sandrauno",    
             database="cafe"   
@@ -71,7 +72,7 @@ def actualizar_tabla(tree):
 def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
     try:
         conn = mysql.connector.connect(
-            host="localhost",            
+            host=pedir_ip(),            
             user="root",           
             password="sandrauno",    
             database="cafe"    
@@ -94,7 +95,7 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
 def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, tree):
     try:
         conn = mysql.connector.connect(
-            host="localhost",            
+            host=pedir_ip(),            
             user="root",           
             password="sandrauno",    
             database="cafe"    
@@ -168,7 +169,7 @@ def buscar_producto(tree, termino_busqueda):
     # Conectar a la base de datos y buscar productos
     try:
         conn = mysql.connector.connect(
-            host="localhost",
+            host=pedir_ip(),
             user="root",
             password="sandrauno",
             database="cafe"
@@ -198,7 +199,7 @@ def actualizar_tabla(tree):
     # Conectar a la base de datos y obtener los productos
     try:
         conn = mysql.connector.connect(
-            host="localhost",
+            host=pedir_ip(),
             user="root",
             password="sandrauno",
             database="cafe"
@@ -229,7 +230,7 @@ def eliminar_producto(tree):
 
     try:
         conn = mysql.connector.connect(
-            host="localhost",            
+            host=pedir_ip(),            
             user="root",           
             password="sandrauno",    
             database="cafe"    

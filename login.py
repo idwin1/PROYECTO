@@ -5,6 +5,8 @@ import ast
 import mysql.connector
 import os
 
+def pedir_ip():
+    return "10.0.43.113"
 # Crear ventana principal
 root = Tk()
 root.title('Acceso')
@@ -92,7 +94,7 @@ def login():
     try:
         # Conectar a la base de datos MySQL
         connection = mysql.connector.connect(
-            host='localhost',
+            host=pedir_ip(),
             user='root',  # Reemplaza con tu usuario de MySQL
             password='sandrauno',  # Reemplaza con tu contraseña de MySQL
             database='cafe'  # Base de datos 'cafe'
