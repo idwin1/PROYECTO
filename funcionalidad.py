@@ -16,6 +16,16 @@ def seleccionar_opcion(opcion):
         from Reportes import abrir_interfaz_Reportes  # Importa solo cuando se necesite
         print("Abriendo interfaz de reportes...")
         abrir_interfaz_Reportes()
-
+        
+    elif opcion == "Estadísticas":
+        print("abriendo Estadisticas")
+    elif opcion == "Usuarios":
+        print("abriendo Usuarios") 
+    elif opcion == "Tareas":
+        print("abriendo Tareas")   
+    elif opcion == "Inventario":
+        from Buscar_productos import abrir_Buscar_Productos
+        print("abriendo BUSCAR PRODUCTOS")
+        abrir_Buscar_Productos()
     else:
         print(f"No se encontró la opción: {opcion}")

@@ -49,8 +49,8 @@ def actualizar_tabla(tree):
         conn = mysql.connector.connect(
             host="localhost",            
             user="root",           
-            password="Wario2400_",    
-            database="prueba"   
+            password="sandrauno",    
+            database="cafe"   
         )
         cursor = conn.cursor()
 
@@ -73,8 +73,8 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
         conn = mysql.connector.connect(
             host="localhost",            
             user="root",           
-            password="Wario2400_",    
-            database="prueba"    
+            password="sandrauno",    
+            database="cafe"    
         )
         cursor = conn.cursor()
 
@@ -96,8 +96,8 @@ def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_produc
         conn = mysql.connector.connect(
             host="localhost",            
             user="root",           
-            password="Wario2400_",    
-            database="prueba"    
+            password="sandrauno",    
+            database="cafe"    
         )
         cursor = conn.cursor()
 
@@ -170,8 +170,8 @@ def buscar_producto(tree, termino_busqueda):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Wario2400_",
-            database="prueba"
+            password="sandrauno",
+            database="cafe"
         )
         cursor = conn.cursor()
 
@@ -200,8 +200,8 @@ def actualizar_tabla(tree):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Wario2400_",
-            database="prueba"
+            password="sandrauno",
+            database="cafe"
         )
         cursor = conn.cursor()
 
@@ -231,8 +231,8 @@ def eliminar_producto(tree):
         conn = mysql.connector.connect(
             host="localhost",            
             user="root",           
-            password="Wario2400_",    
-            database="prueba"    
+            password="sandrauno",    
+            database="cafe"    
         )
         cursor = conn.cursor()
 
