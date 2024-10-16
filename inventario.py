@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 import mysql.connector
-from login import pedir_ip
+from conexion_bd import pedir_ip
 # Función para mostrar la interfaz de inventario en el área central
 def mostrar_inventario(frame_central):
     
@@ -41,18 +41,14 @@ def mostrar_inventario(frame_central):
 
 # Función para actualizar la tabla de productos
 def actualizar_tabla(tree):
+    from conexion_bd import conexion
     # Limpiar la tabla existente
     for row in tree.get_children():
         tree.delete(row)
 
     # Conectar a la base de datos y obtener los productos
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),            
-            user="root",           
-            password="sandrauno",    
-            database="cafe"   
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "SELECT ID, Producto, Cantidad FROM productos"
@@ -70,13 +66,9 @@ def actualizar_tabla(tree):
 
 # Función para agregar un producto
 def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
+    from conexion_bd import conexion
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),            
-            user="root",           
-            password="sandrauno",    
-            database="cafe"    
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "INSERT INTO productos (ID, Producto, Cantidad) VALUES (%s, %s, %s)"
@@ -93,13 +85,9 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
 
 # Función para modificar un producto
 def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, tree):
+    from conexion_bd import conexion
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),            
-            user="root",           
-            password="sandrauno",    
-            database="cafe"    
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "UPDATE productos SET Producto = %s, Cantidad = %s WHERE ID = %s"
@@ -162,18 +150,14 @@ def mostrar_inventario(frame_central):
 
 # Función para buscar productos
 def buscar_producto(tree, termino_busqueda):
+    from conexion_bd import conexion
     # Limpiar la tabla existente
     for row in tree.get_children():
         tree.delete(row)
 
     # Conectar a la base de datos y buscar productos
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),
-            user="root",
-            password="sandrauno",
-            database="cafe"
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "SELECT ID, Producto, Cantidad FROM productos WHERE Producto LIKE %s OR ID LIKE %s"
@@ -192,18 +176,14 @@ def buscar_producto(tree, termino_busqueda):
 
 # Función para actualizar la tabla de productos
 def actualizar_tabla(tree):
+    from conexion_bd import conexion
     # Limpiar la tabla existente
     for row in tree.get_children():
         tree.delete(row)
 
     # Conectar a la base de datos y obtener los productos
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),
-            user="root",
-            password="sandrauno",
-            database="cafe"
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "SELECT ID, Producto, Cantidad FROM productos"
@@ -221,6 +201,7 @@ def actualizar_tabla(tree):
 
 # Función para eliminar un producto
 def eliminar_producto(tree):
+    from conexion_bd import conexion
     selected_item = tree.selection()
     if not selected_item:
         messagebox.showwarning("Advertencia", "Seleccione un producto para eliminar.")
@@ -229,12 +210,7 @@ def eliminar_producto(tree):
     id_producto = tree.item(selected_item, 'values')[0]
 
     try:
-        conn = mysql.connector.connect(
-            host=pedir_ip(),            
-            user="root",           
-            password="sandrauno",    
-            database="cafe"    
-        )
+        conn = conexion()
         cursor = conn.cursor()
 
         query = "DELETE FROM productos WHERE ID = %s"
