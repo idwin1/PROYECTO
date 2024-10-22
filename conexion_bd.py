@@ -1,7 +1,10 @@
 import mysql.connector
+import socket
+
+
 
 def pedir_ip():
-    return "10.0.41.103"
+    return "localhost"
 
 def conexion():
     connection = mysql.connector.connect(
@@ -11,3 +14,5 @@ def conexion():
             database='cafe'  # Base de datos 'cafe'
         )
     return connection
+
+r = pedir_ip()
