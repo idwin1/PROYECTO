@@ -18,16 +18,20 @@ def mostrar_inventario(frame_central):
     style.map("Treeview", background=[('selected', 'lightblue')])
 
     # Configurar la tabla de productos
-    Label(frame_central, text="Inventario", font=('Arial', 16)).grid(row=0, column=0, columnspan=3, pady=10)
+   # Configurar la tabla de productos
+    Label(frame_central, text="Inventario", font=('Arial', 16)).grid(row=0, column=0, columnspan=4, pady=10)
 
-    tree = ttk.Treeview(frame_central, columns=("ID", "Producto", "Cantidad"), show='headings')
+    tree = ttk.Treeview(frame_central, columns=("ID", "Producto", "Cantidad", "Medida"), show='headings')
     tree.heading("ID", text="ID")
     tree.heading("Producto", text="Producto")
     tree.heading("Cantidad", text="Cantidad")
+    tree.heading("Medida", text="Medida")
     tree.column("ID", width=100)
     tree.column("Producto", width=200)
     tree.column("Cantidad", width=100)
-    tree.grid(row=1, column=0, columnspan=3, padx=20)
+    tree.column("Medida", width=100)
+    tree.grid(row=2, column=0, columnspan=4, padx=20)
+
 
     # Botones para agregar, modificar y eliminar productos
     frame_botones = Frame(frame_central)
@@ -43,16 +47,14 @@ def mostrar_inventario(frame_central):
 # Función para actualizar la tabla de productos
 def actualizar_tabla(tree):
     from conexion_bd import conexion
-    # Limpiar la tabla existente
     for row in tree.get_children():
         tree.delete(row)
 
-    # Conectar a la base de datos y obtener los productos
     try:
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "SELECT ID, Producto, Cantidad FROM productos"
+        query = "SELECT ID, Producto, Cantidad, Medida FROM productos"
         cursor.execute(query)
         productos = cursor.fetchall()
 
@@ -66,14 +68,14 @@ def actualizar_tabla(tree):
         conn.close()
 
 # Función para agregar un producto
-def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
+def agregar_producto(id_producto, nombre_producto, cantidad_producto, medida_producto, tree):
     from conexion_bd import conexion
     try:
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "INSERT INTO productos (ID, Producto, Cantidad) VALUES (%s, %s, %s)"
-        cursor.execute(query, (id_producto, nombre_producto, cantidad_producto))
+        query = "INSERT INTO productos (ID, Producto, Cantidad, Medida) VALUES (%s, %s, %s, %s)"
+        cursor.execute(query, (id_producto, nombre_producto, cantidad_producto, medida_producto))
         conn.commit()
 
         messagebox.showinfo("Éxito", "Producto agregado correctamente.")
@@ -84,15 +86,16 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, tree):
         cursor.close()
         conn.close()
 
+
 # Función para modificar un producto
-def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, tree):
+def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, nueva_medida_producto, tree):
     from conexion_bd import conexion
     try:
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "UPDATE productos SET Producto = %s, Cantidad = %s WHERE ID = %s"
-        cursor.execute(query, (nuevo_nombre_producto, nueva_cantidad_producto, id_producto))
+        query = "UPDATE productos SET Producto = %s, Cantidad = %s, Medida = %s WHERE ID = %s"
+        cursor.execute(query, (nuevo_nombre_producto, nueva_cantidad_producto, nueva_medida_producto, id_producto))
         conn.commit()
 
         if cursor.rowcount == 0:
