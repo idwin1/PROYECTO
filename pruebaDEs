@@ -1,34 +1,90 @@
-from passlib.hash import md5_crypt
-import itertools
-import string
-from tqdm import tqdm
+import asyncio
+import tkinter as tk
+from tkinter import messagebox
+from bleak import BleakScanner, BleakClient
+import threading
 
-# Hash MD5 Crypt que estás tratando de descifrar
-hash_crypt = "$1$mERr$rAevEMtqM4xHMHOPAc4P60"  # El hash que diste
+# UUIDs específicas de Particle Photon 2 (deberías reemplazarlas por las correctas)
+SERVICE_UUID = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # Reemplazar por el UUID del servicio del Photon
+CHARACTERISTIC_UUID = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # Reemplazar por el UUID de la característica
 
-# Longitud máxima de la contraseña a probar
-max_length = 5
+# Variable global para mantener la dirección del dispositivo seleccionado
+dispositivo_seleccionado = None
 
-# Posibles caracteres en la contraseña (aquí se usan letras minúsculas y dígitos)
-characters = string.ascii_lowercase + string.digits
+# Función asíncrona para buscar dispositivos Bluetooth
+async def buscar_dispositivos_async():
+    dispositivos = await BleakScanner.discover()
+    lista_dispositivos.delete(0, tk.END)
+    if dispositivos:
+        for dispositivo in dispositivos:
+            lista_dispositivos.insert(tk.END, f"{dispositivo.name or 'Desconocido'} ({dispositivo.address})")
+    else:
+        messagebox.showinfo("Resultado", "No se encontraron dispositivos")
 
-# Calcular el total de combinaciones posibles
-total_combinations = sum(len(characters) ** length for length in range(1, max_length + 1))
+# Función para ejecutar la búsqueda en un hilo separado
+def iniciar_busqueda():
+    boton_buscar.config(state=tk.DISABLED)
+    hilo = threading.Thread(target=ejecutar_busqueda)
+    hilo.start()
 
-def brute_force_md5_crypt(hash_crypt):
-    with tqdm(total=total_combinations) as progress_bar:
-        for length in range(1, max_length + 1):
-            for attempt in itertools.product(characters, repeat=length):
-                attempt_password = ''.join(attempt)
-                # Verificar si el hash generado coincide con el hash que diste
-                if md5_crypt.verify(attempt_password, hash_crypt):
-                    return attempt_password
-                progress_bar.update(1)  # Actualizar la barra de progreso
-    return None
+# Función que ejecuta el bucle asyncio en el hilo separado
+def ejecutar_busqueda():
+    loop = asyncio.new_event_loop()  # Crear un nuevo bucle de eventos
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(buscar_dispositivos_async())
+    boton_buscar.config(state=tk.NORMAL)
 
-# Intentar descifrar
-password = brute_force_md5_crypt(hash_crypt)
-if password:
-    print(f"Contraseña encontrada: {password}")
-else:
-    print("Contraseña no encontrada.")
+# Función para conectar con el dispositivo seleccionado
+async def conectar_dispositivo_async(address):
+    async with BleakClient(address) as client:
+        try:
+            # Verificar si está conectado
+            if client.is_connected:
+                messagebox.showinfo("Conectado", f"Conectado a {address}")
+                
+                # Leer valor de la característica del servicio del Photon 2
+                valor = await client.read_gatt_char(CHARACTERISTIC_UUID)
+                messagebox.showinfo("Valor", f"Valor leído: {valor}")
+                
+                # Escribir en la característica (si es necesario)
+                # await client.write_gatt_char(CHARACTERISTIC_UUID, b'\x01')  # Ejemplo de escritura
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo conectar: {str(e)}")
+
+# Función para iniciar la conexión
+def conectar_dispositivo():
+    seleccion = lista_dispositivos.curselection()
+    if seleccion:
+        dispositivo = lista_dispositivos.get(seleccion[0])
+        global dispositivo_seleccionado
+        dispositivo_seleccionado = dispositivo.split("(")[-1].strip(")")
+        hilo = threading.Thread(target=ejecutar_conexion)
+        hilo.start()
+    else:
+        messagebox.showwarning("Advertencia", "Selecciona un dispositivo")
+
+# Función para ejecutar la conexión en un hilo separado
+def ejecutar_conexion():
+    if dispositivo_seleccionado:
+        loop = asyncio.new_event_loop()  # Crear un nuevo bucle de eventos
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(conectar_dispositivo_async(dispositivo_seleccionado))
+
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.title("Conectar Bluetooth (Particle Photon 2)")
+
+# Crear botón para buscar dispositivos
+boton_buscar = tk.Button(ventana, text="Buscar Dispositivos", command=iniciar_busqueda)
+boton_buscar.pack(pady=10)
+
+# Crear lista para mostrar dispositivos
+lista_dispositivos = tk.Listbox(ventana, width=50)
+lista_dispositivos.pack(pady=10)
+
+# Crear botón para conectar al dispositivo seleccionado
+boton_conectar = tk.Button(ventana, text="Conectar", command=conectar_dispositivo)
+boton_conectar.pack(pady=10)
+
+# Iniciar el bucle de la interfaz
+ventana.mainloop()

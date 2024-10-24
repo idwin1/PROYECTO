@@ -68,7 +68,7 @@ def actualizar_tabla(tree):
         conn.close()
 
 # Función para agregar un producto
-def agregar_producto(id_producto, nombre_producto, cantidad_producto, medida_producto, tree):
+def agregar_producto(id_producto, nombre_producto, cantidad_producto, medida_producto, tree,ventana_agregar):
     from conexion_bd import conexion
     try:
         conn = conexion()
@@ -80,6 +80,7 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, medida_pro
 
         messagebox.showinfo("Éxito", "Producto agregado correctamente.")
         actualizar_tabla(tree)
+        ventana_agregar.destroy()
     except mysql.connector.Error as err:
         messagebox.showerror("Error", f"Error al agregar el producto: {err}")
     finally:
@@ -88,7 +89,7 @@ def agregar_producto(id_producto, nombre_producto, cantidad_producto, medida_pro
 
 
 # Función para modificar un producto
-def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, nueva_medida_producto, tree):
+def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_producto, nueva_medida_producto ,tree,ventana_modificar):
     from conexion_bd import conexion
     try:
         conn = conexion()
@@ -97,7 +98,6 @@ def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_produc
         query = "UPDATE productos SET Producto = %s, Cantidad = %s, Medida = %s WHERE ID = %s"
         cursor.execute(query, (nuevo_nombre_producto, nueva_cantidad_producto, nueva_medida_producto, id_producto))
         conn.commit()
-
         if cursor.rowcount == 0:
             messagebox.showwarning("Advertencia", "No se encontró ningún producto con ese ID.")
         else:
@@ -125,13 +125,15 @@ def mostrar_inventario(frame_central):
     # Configurar la tabla de productos
     Label(frame_central, text="Inventario", font=('Arial', 16)).grid(row=0, column=0, columnspan=4, pady=10)
 
-    tree = ttk.Treeview(frame_central, columns=("ID", "Producto", "Cantidad"), show='headings')
+    tree = ttk.Treeview(frame_central, columns=("ID", "Producto", "Cantidad","Medida"), show='headings')
     tree.heading("ID", text="ID")
     tree.heading("Producto", text="Producto")
     tree.heading("Cantidad", text="Cantidad")
+    tree.heading("Medida", text = "Medida")
     tree.column("ID", width=100)
     tree.column("Producto", width=200)
     tree.column("Cantidad", width=100)
+    tree.column("Medida",width=100)
     tree.grid(row=2, column=0, columnspan=4, padx=20)
 
     # Crear barra de búsqueda
@@ -164,7 +166,7 @@ def buscar_producto(tree, termino_busqueda):
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "SELECT ID, Producto, Cantidad FROM productos WHERE Producto LIKE %s OR ID LIKE %s"
+        query = "SELECT ID, Producto, Cantidad,Medida FROM productos WHERE Producto LIKE %s OR ID LIKE %s"
         termino = f"%{termino_busqueda}%"
         cursor.execute(query, (termino, termino))
         productos = cursor.fetchall()
@@ -190,7 +192,7 @@ def actualizar_tabla(tree):
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "SELECT ID, Producto, Cantidad FROM productos"
+        query = "SELECT ID, Producto, Cantidad,Medida FROM productos"
         cursor.execute(query)
         productos = cursor.fetchall()
 
@@ -319,8 +321,14 @@ def abrir_ventana_agregar(tree):
     entry_cantidad = Entry(ventana_agregar)
     entry_cantidad.grid(row=2, column=1)
 
+    Label(ventana_agregar,text="Unidad").grid(row=3,column=0)
+    entry_unidad = Entry(ventana_agregar)
+    entry_unidad.grid(row=3,column=1)
+
+
     Button(ventana_agregar, text="Agregar", 
-           command=lambda: agregar_producto(entry_id.get(), entry_nombre.get(), entry_cantidad.get(), tree)).grid(row=3, columnspan=2)
+           command=lambda: agregar_producto(entry_id.get(), entry_nombre.get(), entry_cantidad.get(),entry_unidad.get(), tree,ventana_agregar)).grid(row=4, columnspan=3)
+    
 
 def abrir_ventana_modificar(tree):
     global root  # Asegúrate de que root está disponible
@@ -332,6 +340,7 @@ def abrir_ventana_modificar(tree):
     id_producto = tree.item(selected_item, 'values')[0]
     nombre_producto = tree.item(selected_item, 'values')[1]
     cantidad_producto = tree.item(selected_item, 'values')[2]
+    medida_producto = tree.item(selected_item,'values')[3]
 
     ventana_modificar = Toplevel(root)
     ventana_modificar.title("Modificar Producto")
@@ -352,8 +361,14 @@ def abrir_ventana_modificar(tree):
     entry_cantidad.insert(0, cantidad_producto)
     entry_cantidad.grid(row=2, column=1)
 
+    Label(ventana_modificar, text="Medida:").grid(row=3, column=0)
+    entry_medida = Entry(ventana_modificar)
+    entry_medida.insert(0, medida_producto)
+    entry_medida.grid(row=3, column=1)
+
     Button(ventana_modificar, text="Modificar", 
-           command=lambda: modificar_producto(entry_id.get(), entry_nombre.get(), entry_cantidad.get(), tree)).grid(row=3, columnspan=2)
+           command=lambda: modificar_producto(entry_id.get(), entry_nombre.get(), entry_cantidad.get(),entry_medida.get(), tree,ventana_modificar.destroy())).grid(row=4, columnspan=2)
+    
 
 def abrir_inventario():
     global root
