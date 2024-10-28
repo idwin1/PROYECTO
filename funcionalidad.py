@@ -20,8 +20,10 @@ def seleccionar_opcion(opcion):
     elif opcion == "Estadísticas":
         print("abriendo Estadisticas")
     elif opcion == "Usuarios":
+        from usuarios import abrir_usuarios
         print("abriendo Usuarios")
         print("entron a la opcion de usuarios") 
+        abrir_usuarios()
     elif opcion == "Tareas":
         print("abriendo Tareas")   
     elif opcion == "Inventario":
