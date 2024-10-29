@@ -24,7 +24,8 @@ opciones_menu = [
     {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
     {"texto": "Usuarios", "icono": "👤"},
     {"texto": "Tareas", "icono": "📝"},
-    {"texto": "Inventario", "icono": "📦"}
+    {"texto": "Inventario", "icono": "📦"},
+    {"texto": "Recetas", "icono": "🗒️"}
 ]
 
 # Crear los botones en el menú lateral

@@ -101,6 +101,7 @@ def login():
         cursor.execute(query, (Nom, contr))
         result = cursor.fetchone()
 
+
         if result:
             messagebox.showinfo("Éxito", "Inicio de sesión exitoso.")
             from funcionalidad import seleccionar_opcion  # Importar la función que manejará la selección de opción

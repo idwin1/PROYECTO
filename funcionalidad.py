@@ -30,5 +30,9 @@ def seleccionar_opcion(opcion):
         from inventario import abrir_inventario
         print("abriendo BUSCAR PRODUCTOS")
         abrir_inventario()
+    elif opcion == "Recetas":
+        from recetas import abrir_recetas
+        print("abriendo Recetas")
+        abrir_recetas()
     else:
         print(f"No se encontró la opción: {opcion}")
