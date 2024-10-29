@@ -6,7 +6,102 @@ import time
 import tkinter as tk
 from tkinter import ttk
 # Función para mostrar la interfaz de recetas en el área central
+from tkinter import *
+from tkinter import messagebox, ttk
+from tkinter import simpledialog
+import mysql.connector
+import time
+import tkinter as tk
 
+def mostrar_recetas(frame_central):
+    for widget in frame_central.winfo_children():
+        widget.destroy()
+
+    # Configuración de estilo
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure("Treeview", foreground="black", background="#F9F9F9")
+    style.configure("Treeview.Heading", font=('Helvetica', 12, 'bold'), background="#4CAF50", foreground="white")
+    style.map("Treeview", background=[('selected', '#AED6F1')])
+
+    Label(frame_central, text="Recetas", font=('Helvetica', 18, 'bold'), fg="#333", bg="#fff").grid(row=0, column=0, columnspan=4, pady=10)
+
+    tree = ttk.Treeview(frame_central, columns=("ID", "Nombre", "Ingredientes", "Elaboración"), show='headings')
+    tree.heading("ID", text="ID")
+    tree.heading("Nombre", text="Nombre")
+    tree.heading("Ingredientes", text="Ingredientes")
+    tree.heading("Elaboración", text="Elaboración")
+    tree.column("ID", width=80)
+    tree.column("Nombre", width=180)
+    tree.column("Ingredientes", width=300)
+    tree.column("Elaboración", width=250)
+    tree.grid(row=2, column=0, columnspan=4, padx=20)
+
+    Label(frame_central, text="Buscar Receta:", bg="#fff").grid(row=1, column=0, padx=10, pady=10, sticky="e")
+    entry_busqueda = Entry(frame_central, bg="#F1F1F1", font=('Helvetica', 12))
+    entry_busqueda.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+    Button(frame_central, text="Buscar", command=lambda: buscar_receta(tree, entry_busqueda.get()), bg='#5DADE2', font=('Helvetica', 12), fg="white").grid(row=1, column=2, padx=10, sticky="w")
+
+    frame_botones = Frame(frame_central, bg="#fff")
+    frame_botones.grid(row=3, column=0, columnspan=4, pady=10)
+
+    Button(frame_botones, text="Agregar Receta", command=lambda: abrir_ventana_agregar(tree), bg='#58D68D', font=('Helvetica', 12), fg="white", padx=5, pady=5).grid(row=0, column=0, padx=5)
+    Button(frame_botones, text="Modificar Receta", command=lambda: abrir_ventana_modificar(tree), bg='#F7DC6F', font=('Helvetica', 12), fg="black", padx=5, pady=5).grid(row=0, column=1, padx=5)
+    Button(frame_botones, text="Eliminar Receta", command=lambda: eliminar_receta(tree), bg='#E74C3C', font=('Helvetica', 12), fg="white", padx=5, pady=5).grid(row=0, column=2, padx=5)
+
+    actualizar_tabla(tree)
+
+def abrir_recetas():
+    global root
+    root = tk.Tk()
+    root.title('Recetas')
+    root.geometry('950x500+300+200')
+    root.configure(bg="#f4f4f9")
+    root.resizable(False, False)
+
+    menu_lateral = tk.Frame(root, bg="#333", width=150)
+    menu_lateral.pack(side="left", fill="y")
+    frame_central = Frame(root, bg="#fff")
+    frame_central.pack(side="right", expand=True, fill="both")
+
+    opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Reportes", "icono": "📊"},
+        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
+        {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"}
+    ]
+
+    for opcion in opciones_menu:
+        frame_opcion = tk.Frame(menu_lateral, bg="#333")
+        frame_opcion.pack(fill="x", pady=1)
+
+        etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="#333", fg="#fff", font=('Helvetica', 10, 'bold'))
+        etiqueta.pack(fill="x")
+
+        if opcion.get("notificacion"):
+            notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="#333", anchor="e")
+            notificacion.pack(side="right", padx=5)
+
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
+
+    menu_inferior = Frame(root, bg="#333", height=50)
+    menu_inferior.pack(side="bottom", fill="x")
+
+    opciones_inferiores = ["Ver Recetas"]
+
+    for texto in opciones_inferiores:
+        boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#5DADE2", fg="white", font=('Helvetica', 12), borderwidth=0,
+                       command=lambda t=texto: mostrar_recetas(frame_central))
+        boton.pack(side="left", padx=20)
+
+    root.mainloop()
+
+
+"""
 def mostrar_recetas(frame_central):
     # Limpiar el contenido actual del área central
     for widget in frame_central.winfo_children():
@@ -50,7 +145,7 @@ def mostrar_recetas(frame_central):
 
     # Actualizar la tabla de recetas al inicio
     actualizar_tabla(tree)
-
+"""
 # Función para buscar recetas
 def buscar_receta(tree, termino_busqueda):
     from conexion_bd import conexion
@@ -101,124 +196,9 @@ def actualizar_tabla(tree):
         conn.close()  
 
 # Función para abrir la ventana para agregar una receta
-"""def abrir_ventana_agregar(tree):
-
-    global root  # Asegúrate de que root está disponible
-    ventana_agregar = Toplevel(root)
-    ventana_agregar.title("Agregar Receta")
-
-
-    Label(ventana_agregar, text="Nombre de la Receta:").grid(row=1, column=0)
-    entry_nombre = Entry(ventana_agregar)
-    entry_nombre.grid(row=1, column=1)
-
-    Label(ventana_agregar, text="Ingredientes:").grid(row=2, column=0)
-    entry_ingredientes = Entry(ventana_agregar)
-    entry_ingredientes.grid(row=2, column=1)
-
-    Label(ventana_agregar, text="Elaboración:").grid(row=3, column=0)
-    entry_elaboracion = Entry(ventana_agregar)
-    entry_elaboracion.grid(row=3, column=1)
-
-    Button(ventana_agregar, text="Agregar", 
-           command=lambda: agregar_receta(entry_nombre.get(), entry_ingredientes.get(), entry_elaboracion.get(), tree, ventana_agregar)).grid(row=4, columnspan=2)
-"""
 
 
 
-"""
-def abrir_ventana_agregar(tree):
-    global root  # Asegúrate de que root está disponible
-    ventana_agregar = Toplevel(root)
-    ventana_agregar.title("Agregar Receta")
-
-    Label(ventana_agregar, text="Nombre de la Receta:").grid(row=0, column=0)
-    entry_nombre = Entry(ventana_agregar)
-    entry_nombre.grid(row=0, column=1)
-
-    # Sección para los ingredientes
-    Label(ventana_agregar, text="Ingredientes:").grid(row=1, column=0, columnspan=2)
-
-    # Frame que contendrá los ingredientes y sus etiquetas
-    ingredientes_frame = Frame(ventana_agregar)
-    ingredientes_frame.grid(row=2, column=0, columnspan=2)
-
-    # Encabezados para los campos de ingredientes
-    Label(ingredientes_frame, text="Nombre del Ingrediente").grid(row=0, column=0)
-    Label(ingredientes_frame, text="Cantidad").grid(row=0, column=1)
-    Label(ingredientes_frame, text="Unidad").grid(row=0, column=2)
-
-    # Lista para almacenar los campos de ingredientes
-    ingredientes_entries = []
-
-    # Función para agregar una nueva fila de ingredientes
-    def agregar_ingrediente():
-        row = len(ingredientes_entries) + 1  # Empieza en la fila siguiente a las etiquetas
-        entry_nombre_ingrediente = Entry(ingredientes_frame)
-        entry_nombre_ingrediente.grid(row=row, column=0)
-        
-        entry_cantidad = Entry(ingredientes_frame)
-        entry_cantidad.grid(row=row, column=1)
-        
-        entry_unidad = Entry(ingredientes_frame)
-        entry_unidad.grid(row=row, column=2)
-        
-        # Añadir los campos a la lista
-        ingredientes_entries.append((entry_nombre_ingrediente, entry_cantidad, entry_unidad))
-
-    # Agregar la primera fila de ingredientes
-    agregar_ingrediente()
-
-    # Botón para agregar más filas de ingredientes
-    Button(ventana_agregar, text="Agregar Ingrediente", command=agregar_ingrediente).grid(row=3, columnspan=2)
-
-    # Sección para la elaboración
-    Label(ventana_agregar, text="Elaboración:").grid(row=4, column=0)
-    entry_elaboracion = Entry(ventana_agregar)
-    entry_elaboracion.grid(row=4, column=1)
-
-    # Función para recopilar los datos y agregarlos al árbol
-    def agregar_datos():
-        nombre_receta = entry_nombre.get()
-        elaboracion = entry_elaboracion.get()
-        ingredientes = [(entry[0].get(), entry[1].get(), entry[2].get()) for entry in ingredientes_entries]
-        print(ingredientes)
-        agregar_receta(nombre_receta, ingredientes, elaboracion, tree, ventana_agregar)
-
-    # Botón para agregar la receta
-    Button(ventana_agregar, text="Agregar", command=agregar_datos).grid(row=5, columnspan=2)
-
-# Asegúrate de que tienes una función agregar_receta adecuada para manejar la estructura de datos actual
-
-
-# Función para agregar una receta
-def agregar_receta(nombre_receta, ingredientes, elaboracion, tree, ventana_agregar):
-    from conexion_bd import conexion
-    print(ingredientes)
-    try:
-        conn = conexion()
-        cursor = conn.cursor()
-
-        query = "INSERT INTO receta (Nombre, Elaboracion) VALUES (%s, %s)"
-        cursor.execute(query, (nombre_receta, elaboracion))
-        conn.commit()
-        receta_id = cursor.lastrowid
-        query_ingrediente = "INSERT INTO ingredientes (receta_id, nombre, cantidad, unidad) VALUES (%s, %s, %s, %s)"
-        for ingrediente in ingredientes:
-            cursor.execute(query_ingrediente, (receta_id, ingrediente[0], ingrediente[1], ingrediente[2]))
-
-        # Confirmar los cambios
-        conn.commit()
-        messagebox.showinfo("Éxito", "Receta agregada correctamente.")
-        actualizar_tabla(tree)
-        ventana_agregar.destroy()
-    except mysql.connector.Error as err:
-        messagebox.showerror("Error", f"Error al agregar la receta: {err}")
-    finally:
-        cursor.close()
-        conn.close()
-
-"""
 
 
 
@@ -315,47 +295,7 @@ def agregar_receta(nombre_receta, ingredientes, elaboracion, tree, ventana_agreg
     finally:
         cursor.close()
         conn.close()
-"""
-# Función para abrir la ventana para modificar una receta
-def abrir_ventana_modificar(tree):
-    global root  # Asegúrate de que root está disponible
-    selected_item = tree.selection()
-    if not selected_item:
-        messagebox.showwarning("Advertencia", "Seleccione una receta para modificar.")
-        return
 
-    id_receta = tree.item(selected_item, 'values')[0]
-    nombre_receta = tree.item(selected_item, 'values')[1]
-    ingredientes = tree.item(selected_item, 'values')[2]
-    elaboracion = tree.item(selected_item, 'values')[3]
-
-    ventana_modificar = Toplevel(root)
-    ventana_modificar.title("Modificar Receta")
-
-    Label(ventana_modificar, text="ID de la Receta:").grid(row=0, column=0)
-    entry_id = Entry(ventana_modificar)
-    entry_id.insert(0, id_receta)
-    entry_id.config(state='readonly')
-    entry_id.grid(row=0, column=1)
-
-    Label(ventana_modificar, text="Nombre de la Receta:").grid(row=1, column=0)
-    entry_nombre = Entry(ventana_modificar)
-    entry_nombre.insert(0, nombre_receta)
-    entry_nombre.grid(row=1, column=1)
-
-    Label(ventana_modificar, text="Ingredientes:").grid(row=2, column=0)
-    entry_ingredientes = Entry(ventana_modificar)
-    entry_ingredientes.insert(0, ingredientes)
-    entry_ingredientes.grid(row=2, column=1)
-
-    Label(ventana_modificar, text="Elaboración:").grid(row=3, column=0)
-    entry_elaboracion = Entry(ventana_modificar)
-    entry_elaboracion.insert(0, elaboracion)
-    entry_elaboracion.grid(row=3, column=1)
-
-    Button(ventana_modificar, text="Modificar", 
-           command=lambda: modificar_receta(entry_id.get(), entry_nombre.get(), entry_ingredientes.get(), entry_elaboracion.get(), tree, ventana_modificar.destroy())).grid(row=4, columnspan=2)
-"""
 def abrir_ventana_modificar(tree):
     global root
     selected_item = tree.selection()
@@ -459,82 +399,6 @@ def modificar_receta(id_receta, nombre_receta, ingredientes, elaboracion, tree):
         cursor.close()
         conn.close()
 
-
-"""
-def agregar_receta(self):
-        nombre = simpledialog.askstring("Agregar Receta", "Ingrese el nombre de la receta:")
-        elaboracion = simpledialog.askstring("Agregar Receta", "Ingrese la elaboración:")
-        if nombre and elaboracion:
-            self.cursor.execute("INSERT INTO receta (nombre, elaboracion) VALUES (%s, %s)", (nombre, elaboracion))
-            self.conn.commit()
-            receta_id = self.cursor.lastrowid
-            self.agregar_ingredientes(receta_id)
-"""
-"""
-def agregar_ingredientes(self, receta_id):
-        while True:
-            cantidad = simpledialog.askfloat("Agregar Ingrediente", "Ingrese la cantidad:")
-            if cantidad is None:
-                break
-            unidad = simpledialog.askstring("Agregar Ingrediente", "Ingrese la unidad:")
-            ingrediente = simpledialog.askstring("Agregar Ingrediente", "Ingrese el ingrediente:")
-            if unidad and ingrediente:
-                self.cursor.execute("INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES (%s, %s, %s, %s)", 
-                                    (receta_id, cantidad, unidad, ingrediente))
-                self.conn.commit()
-            else:
-                break
-
-        self.cargar_recetas()
-"""
-"""
-def modificar_receta(self):
-        seleccion = self.lista_recetas.curselection()
-        if seleccion:
-            id_receta = self.lista_recetas.get(seleccion[0])[0]
-            nombre = simpledialog.askstring("Modificar Receta", "Ingrese el nuevo nombre de la receta:")
-            elaboracion = simpledialog.askstring("Modificar Receta", "Ingrese la nueva elaboración:")
-            if nombre and elaboracion:
-                self.cursor.execute("UPDATE receta SET nombre = %s, elaboracion = %s WHERE id = %s", 
-                                    (nombre, elaboracion, id_receta))
-                self.conn.commit()
-
-                # Modificar ingredientes
-                self.modificar_ingredientes(id_receta)
-
-                self.cargar_recetas()
-"""
-"""
-
-def modificar_ingredientes(self, receta_id):
-        # Mostrar ingredientes actuales
-        self.cursor.execute("SELECT id, cantidad, unidad, ingrediente FROM ingredientes WHERE receta_id = %s", (receta_id,))
-        ingredientes = self.cursor.fetchall()
-        
-        for id_ingrediente, cantidad, unidad, ingrediente in ingredientes:
-            respuesta = messagebox.askyesno("Modificar Ingrediente", f"¿Desea modificar el ingrediente: {cantidad} {unidad} de {ingrediente}?")
-            if respuesta:
-                nueva_cantidad = simpledialog.askfloat("Modificar Ingrediente", "Ingrese la nueva cantidad:", initialvalue=cantidad)
-                nueva_unidad = simpledialog.askstring("Modificar Ingrediente", "Ingrese la nueva unidad:", initialvalue=unidad)
-                nuevo_ingrediente = simpledialog.askstring("Modificar Ingrediente", "Ingrese el nuevo ingrediente:", initialvalue=ingrediente)
-                
-                if nueva_cantidad is not None and nueva_unidad and nuevo_ingrediente:
-                    self.cursor.execute("UPDATE ingredientes SET cantidad = %s, unidad = %s, ingrediente = %s WHERE id = %s", 
-                                        (nueva_cantidad, nueva_unidad, nuevo_ingrediente, id_ingrediente))
-                    self.conn.commit()
-"""
-"""
-def eliminar_receta(self):
-        seleccion = self.lista_recetas.curselection()
-        if seleccion:
-            id_receta = self.lista_recetas.get(seleccion[0])[0]
-            confirmar = messagebox.askyesno("Confirmar Eliminación", "¿Está seguro de que desea eliminar esta receta?")
-            if confirmar:
-                self.cursor.execute("DELETE FROM receta WHERE id = %s", (id_receta,))
-                self.cursor.execute("DELETE FROM ingredientes WHERE receta_id = %s", (id_receta,))
-                self.conn.commit()
-                self.cargar_recetas()
-"""
 def eliminar_receta(tree):
     # Obtener el elemento seleccionado en el Treeview
     seleccion = tree.selection()
@@ -572,50 +436,6 @@ def eliminar_receta(tree):
 
 
 """
-USE prueba;
-
-
--- Crear la tabla de recetas
-CREATE TABLE recetas (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255) NOT NULL,
-    Elaboracion TEXT NOT NULL
-);
-
-
-
-CREATE TABLE IF NOT EXISTS ingredientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    receta_id INT,
-    cantidad FLOAT NOT NULL,
-    unidad VARCHAR(50) NOT NULL,
-    ingrediente VARCHAR(255) NOT NULL,
-    FOREIGN KEY (receta_id) REFERENCES recetas(id) ON DELETE CASCADE
-);
-
-
--- Insertar receta
-INSERT INTO receta (nombre, elaboracion) VALUES 
-('Guiso de Lentejas', 'Cocinar las lentejas con verduras y especias hasta que estén tiernas.'),
-('Tacos de Pollo', 'Rellenar tortillas de maíz con pollo deshebrado, cebolla y cilantro.');
-
--- Insertar ingredientes para Guiso de Lentejas
-INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
-(1, 1.5, 'tazas', 'Lentejas'),
-(1, 1, 'unidad', 'Cebolla'),
-(1, 2, 'dientes', 'Ajo'),
-(1, 1, 'unidad', 'Zanahoria'),
-(1, 2, 'tazas', 'Caldo de verduras');
-
--- Insertar ingredientes para Tacos de Pollo
-INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
-(7, 2, 'tazas', 'Pollo deshebrado'),
-(7, 4, 'unidad', 'Tortillas de maíz'),
-(7, 0.5, 'taza', 'Cebolla picada'),
-(7, 0.5, 'taza', 'Cilantro picado');
-
-"""
-
 def abrir_recetas():    
     # Crear la ventana principal
     global root
@@ -673,7 +493,7 @@ def abrir_recetas():
 
     # Ejecutar el bucle principal de la aplicación
     root.mainloop()
-
+"""
 def destruir(texto,root) :
     from funcionalidad import seleccionar_opcion
     root.destroy()
@@ -681,3 +501,49 @@ def destruir(texto,root) :
     print("se elimino") 
     time.sleep(1)
     seleccionar_opcion(texto)
+
+
+"""
+USE prueba;
+
+
+-- Crear la tabla de recetas
+CREATE TABLE recetas (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Elaboracion TEXT NOT NULL
+);
+
+
+
+CREATE TABLE IF NOT EXISTS ingredientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    receta_id INT,
+    cantidad FLOAT NOT NULL,
+    unidad VARCHAR(50) NOT NULL,
+    ingrediente VARCHAR(255) NOT NULL,
+    FOREIGN KEY (receta_id) REFERENCES recetas(id) ON DELETE CASCADE
+);
+
+
+-- Insertar receta
+INSERT INTO receta (nombre, elaboracion) VALUES 
+('Guiso de Lentejas', 'Cocinar las lentejas con verduras y especias hasta que estén tiernas.'),
+('Tacos de Pollo', 'Rellenar tortillas de maíz con pollo deshebrado, cebolla y cilantro.');
+
+-- Insertar ingredientes para Guiso de Lentejas
+INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
+(1, 1.5, 'tazas', 'Lentejas'),
+(1, 1, 'unidad', 'Cebolla'),
+(1, 2, 'dientes', 'Ajo'),
+(1, 1, 'unidad', 'Zanahoria'),
+(1, 2, 'tazas', 'Caldo de verduras');
+
+-- Insertar ingredientes para Tacos de Pollo
+INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
+(7, 2, 'tazas', 'Pollo deshebrado'),
+(7, 4, 'unidad', 'Tortillas de maíz'),
+(7, 0.5, 'taza', 'Cebolla picada'),
+(7, 0.5, 'taza', 'Cilantro picado');
+
+"""

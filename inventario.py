@@ -108,7 +108,7 @@ def modificar_producto(id_producto, nuevo_nombre_producto, nueva_cantidad_produc
     finally:
         cursor.close()
         conn.close()
-
+"""
 # Función para mostrar la interfaz de inventario en el área central
 def mostrar_inventario(frame_central):
     # Limpiar el contenido actual del área central
@@ -153,6 +153,59 @@ def mostrar_inventario(frame_central):
 
     # Actualizar la tabla de productos al inicio
     actualizar_tabla(tree)
+"""
+
+
+def mostrar_inventario(frame_central):
+    # Limpiar el contenido actual del área central
+    for widget in frame_central.winfo_children():
+        widget.destroy()
+
+    # Aplicar un estilo
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure("Treeview", foreground="black", background="white", font=('Arial', 10))
+    style.configure("Treeview.Heading", font=('Arial', 12, 'bold'), background="#4caf50", foreground="white")
+    style.map("Treeview", background=[('selected', '#64b5f6')])
+
+    # Configurar el marco del contenido para que quede centrado y tenga espacio alrededor
+    frame_contenido = Frame(frame_central, bg="#f0f0f0", padx=20, pady=10)
+    frame_contenido.pack(expand=True, fill="none")  # Configurar para no expandirse completamente y dejar espacio abajo
+
+    # Configurar la tabla de productos
+    Label(frame_contenido, text="Inventario", font=('Arial', 16, 'bold'), bg="#f0f0f0", fg="#333333").grid(row=0, column=0, columnspan=4, pady=(0, 10))
+
+    tree = ttk.Treeview(frame_contenido, columns=("ID", "Producto", "Cantidad", "Medida"), show='headings')
+    tree.heading("ID", text="ID")
+    tree.heading("Producto", text="Producto")
+    tree.heading("Cantidad", text="Cantidad")
+    tree.heading("Medida", text="Medida")
+    tree.column("ID", width=100)
+    tree.column("Producto", width=200)
+    tree.column("Cantidad", width=100)
+    tree.column("Medida", width=100)
+    tree.grid(row=2, column=0, columnspan=4, padx=20)
+
+    # Crear barra de búsqueda
+    Label(frame_contenido, text="Buscar Producto:", font=('Arial', 12), bg="#f0f0f0", fg="#333333").grid(row=1, column=0, padx=10, pady=10)
+    entry_busqueda = Entry(frame_contenido, font=('Arial', 10))
+    entry_busqueda.grid(row=1, column=1, padx=10, pady=10)
+
+    Button(frame_contenido, text="Buscar", command=lambda: buscar_producto(tree, entry_busqueda.get()), bg="#64b5f6", fg="white", font=('Arial', 12, 'bold')).grid(row=1, column=2, padx=10)
+
+    # Botones para agregar, modificar y eliminar productos
+    frame_botones = Frame(frame_contenido, bg="#f0f0f0")
+    frame_botones.grid(row=3, column=0, columnspan=4, pady=(15, 0))
+
+    Button(frame_botones, text="Agregar Producto", command=lambda: abrir_ventana_agregar(tree), bg="#81c784", fg="white", font=('Arial', 12, 'bold')).grid(row=0, column=0, padx=5)
+    Button(frame_botones, text="Modificar Producto", command=lambda: abrir_ventana_modificar(tree), bg="#ffd54f", fg="black", font=('Arial', 12, 'bold')).grid(row=0, column=1, padx=5)
+    Button(frame_botones, text="Eliminar Producto", command=lambda: eliminar_producto(tree), bg="#e57373", fg="white", font=('Arial', 12, 'bold')).grid(row=0, column=2, padx=5)
+
+    # Actualizar la tabla de productos al inicio
+    actualizar_tabla(tree)
+
+
+
 
 # Función para buscar productos
 def buscar_producto(tree, termino_busqueda):
@@ -369,7 +422,7 @@ def abrir_ventana_modificar(tree):
     Button(ventana_modificar, text="Modificar", 
            command=lambda: modificar_producto(entry_id.get(), entry_nombre.get(), entry_cantidad.get(),entry_medida.get(), tree,ventana_modificar.destroy())).grid(row=4, columnspan=2)
     
-
+"""
 def abrir_inventario():
     global root
     root = Tk()
@@ -429,6 +482,71 @@ def abrir_inventario():
 
     # Ejecutar el bucle principal de la aplicación
     root.mainloop()
+"""
+
+from tkinter import Tk, Frame, Label, Button
+
+def abrir_inventario():
+    global root
+    root = Tk()
+    root.title("Gestión de Inventario")
+    root.geometry('925x500+300+200')
+    root.configure(bg="#fff")
+    root.resizable(False, False)
+
+    # Crear el frame del menú lateral
+    menu_lateral = Frame(root, bg="#333333", width=150)  # Fondo gris oscuro
+    menu_lateral.pack(side="left", fill="y")
+
+    # Crear el frame central donde se mostrará el contenido dinámico
+    frame_central = Frame(root, bg="#f0f0f0")  # Fondo gris claro para el frame central
+    frame_central.pack(side="right", expand=True, fill="both")
+
+    # Crear las opciones del menú lateral
+    opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Reportes", "icono": "📊"},
+        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
+        {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Reservas", "icono": "📅"},
+        {"texto": "Inventario", "icono": "📦"}
+    ]
+
+    # Crear los botones en el menú lateral
+    for opcion in opciones_menu:
+        frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
+        frame_opcion.pack(fill="x", pady=1)
+
+        # Icono y texto de la opción
+        etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
+                         bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
+        etiqueta.pack(fill="x")
+
+        # Si hay una notificación, mostrarla como un punto rojo
+        if opcion.get("notificacion"):
+            notificacion = Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
+            notificacion.pack(side="right", padx=5)
+
+        # Agregar evento para seleccionar opción
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
+
+    # Crear el frame inferior para el nuevo menú
+    menu_inferior = Frame(root, bg="#333333", height=50)  # Fondo gris oscuro
+    menu_inferior.pack(side="bottom", fill="x")
+
+    # Agregar las opciones al menú inferior
+    opciones_inferiores = ["Ver Inventario"]
+
+    for texto in opciones_inferiores:
+        boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#1976d2", fg="white", font=("Arial", 10, "bold"),
+                       borderwidth=0, command=lambda t=texto: seleccionar_opcion_interno(t, frame_central))  # Botón azul con texto blanco
+        boton.pack(side="left", padx=20)
+
+    # Ejecutar el bucle principal de la aplicación
+    root.mainloop()
+
 
 
 def destruir(texto,root) :
