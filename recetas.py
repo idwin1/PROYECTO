@@ -196,14 +196,6 @@ def actualizar_tabla(tree):
         conn.close()  
 
 # Función para abrir la ventana para agregar una receta
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> 1751676cfbe521d9b9f09014b421c3233aa83f25
 
 def abrir_ventana_agregar(tree):
     global root  # Asegúrate de que root está disponible
@@ -402,10 +394,6 @@ def modificar_receta(id_receta, nombre_receta, ingredientes, elaboracion, tree):
         cursor.close()
         conn.close()
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1751676cfbe521d9b9f09014b421c3233aa83f25
 def eliminar_receta(tree):
     # Obtener el elemento seleccionado en el Treeview
     seleccion = tree.selection()
