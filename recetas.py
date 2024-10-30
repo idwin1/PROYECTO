@@ -6,7 +6,102 @@ import time
 import tkinter as tk
 from tkinter import ttk
 # Función para mostrar la interfaz de recetas en el área central
+from tkinter import *
+from tkinter import messagebox, ttk
+from tkinter import simpledialog
+import mysql.connector
+import time
+import tkinter as tk
 
+def mostrar_recetas(frame_central):
+    for widget in frame_central.winfo_children():
+        widget.destroy()
+
+    # Configuración de estilo
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure("Treeview", foreground="black", background="#F9F9F9")
+    style.configure("Treeview.Heading", font=('Helvetica', 12, 'bold'), background="#4CAF50", foreground="white")
+    style.map("Treeview", background=[('selected', '#AED6F1')])
+
+    Label(frame_central, text="Recetas", font=('Helvetica', 18, 'bold'), fg="#333", bg="#fff").grid(row=0, column=0, columnspan=4, pady=10)
+
+    tree = ttk.Treeview(frame_central, columns=("ID", "Nombre", "Ingredientes", "Elaboración"), show='headings')
+    tree.heading("ID", text="ID")
+    tree.heading("Nombre", text="Nombre")
+    tree.heading("Ingredientes", text="Ingredientes")
+    tree.heading("Elaboración", text="Elaboración")
+    tree.column("ID", width=80)
+    tree.column("Nombre", width=180)
+    tree.column("Ingredientes", width=300)
+    tree.column("Elaboración", width=250)
+    tree.grid(row=2, column=0, columnspan=4, padx=20)
+
+    Label(frame_central, text="Buscar Receta:", bg="#fff").grid(row=1, column=0, padx=10, pady=10, sticky="e")
+    entry_busqueda = Entry(frame_central, bg="#F1F1F1", font=('Helvetica', 12))
+    entry_busqueda.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+    Button(frame_central, text="Buscar", command=lambda: buscar_receta(tree, entry_busqueda.get()), bg='#5DADE2', font=('Helvetica', 12), fg="white").grid(row=1, column=2, padx=10, sticky="w")
+
+    frame_botones = Frame(frame_central, bg="#fff")
+    frame_botones.grid(row=3, column=0, columnspan=4, pady=10)
+
+    Button(frame_botones, text="Agregar Receta", command=lambda: abrir_ventana_agregar(tree), bg='#58D68D', font=('Helvetica', 12), fg="white", padx=5, pady=5).grid(row=0, column=0, padx=5)
+    Button(frame_botones, text="Modificar Receta", command=lambda: abrir_ventana_modificar(tree), bg='#F7DC6F', font=('Helvetica', 12), fg="black", padx=5, pady=5).grid(row=0, column=1, padx=5)
+    Button(frame_botones, text="Eliminar Receta", command=lambda: eliminar_receta(tree), bg='#E74C3C', font=('Helvetica', 12), fg="white", padx=5, pady=5).grid(row=0, column=2, padx=5)
+
+    actualizar_tabla(tree)
+
+def abrir_recetas():
+    global root
+    root = tk.Tk()
+    root.title('Recetas')
+    root.geometry('950x500+300+200')
+    root.configure(bg="#f4f4f9")
+    root.resizable(False, False)
+
+    menu_lateral = tk.Frame(root, bg="#333", width=150)
+    menu_lateral.pack(side="left", fill="y")
+    frame_central = Frame(root, bg="#fff")
+    frame_central.pack(side="right", expand=True, fill="both")
+
+    opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Reportes", "icono": "📊"},
+        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
+        {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"}
+    ]
+
+    for opcion in opciones_menu:
+        frame_opcion = tk.Frame(menu_lateral, bg="#333")
+        frame_opcion.pack(fill="x", pady=1)
+
+        etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="#333", fg="#fff", font=('Helvetica', 10, 'bold'))
+        etiqueta.pack(fill="x")
+
+        if opcion.get("notificacion"):
+            notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="#333", anchor="e")
+            notificacion.pack(side="right", padx=5)
+
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
+
+    menu_inferior = Frame(root, bg="#333", height=50)
+    menu_inferior.pack(side="bottom", fill="x")
+
+    opciones_inferiores = ["Ver Recetas"]
+
+    for texto in opciones_inferiores:
+        boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#5DADE2", fg="white", font=('Helvetica', 12), borderwidth=0,
+                       command=lambda t=texto: mostrar_recetas(frame_central))
+        boton.pack(side="left", padx=20)
+
+    root.mainloop()
+
+
+"""
 def mostrar_recetas(frame_central):
     # Limpiar el contenido actual del área central
     for widget in frame_central.winfo_children():
@@ -50,7 +145,7 @@ def mostrar_recetas(frame_central):
 
     # Actualizar la tabla de recetas al inicio
     actualizar_tabla(tree)
-
+"""
 # Función para buscar recetas
 def buscar_receta(tree, termino_busqueda):
     from conexion_bd import conexion
@@ -101,6 +196,14 @@ def actualizar_tabla(tree):
         conn.close()  
 
 # Función para abrir la ventana para agregar una receta
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> 1751676cfbe521d9b9f09014b421c3233aa83f25
 
 def abrir_ventana_agregar(tree):
     global root  # Asegúrate de que root está disponible
@@ -299,7 +402,10 @@ def modificar_receta(id_receta, nombre_receta, ingredientes, elaboracion, tree):
         cursor.close()
         conn.close()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1751676cfbe521d9b9f09014b421c3233aa83f25
 def eliminar_receta(tree):
     # Obtener el elemento seleccionado en el Treeview
     seleccion = tree.selection()
@@ -337,50 +443,6 @@ def eliminar_receta(tree):
 
 
 """
-USE prueba;
-
-
--- Crear la tabla de recetas
-CREATE TABLE recetas (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255) NOT NULL,
-    Elaboracion TEXT NOT NULL
-);
-
-
-
-CREATE TABLE IF NOT EXISTS ingredientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    receta_id INT,
-    cantidad FLOAT NOT NULL,
-    unidad VARCHAR(50) NOT NULL,
-    ingrediente VARCHAR(255) NOT NULL,
-    FOREIGN KEY (receta_id) REFERENCES recetas(id) ON DELETE CASCADE
-);
-
-
--- Insertar receta
-INSERT INTO receta (nombre, elaboracion) VALUES 
-('Guiso de Lentejas', 'Cocinar las lentejas con verduras y especias hasta que estén tiernas.'),
-('Tacos de Pollo', 'Rellenar tortillas de maíz con pollo deshebrado, cebolla y cilantro.');
-
--- Insertar ingredientes para Guiso de Lentejas
-INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
-(1, 1.5, 'tazas', 'Lentejas'),
-(1, 1, 'unidad', 'Cebolla'),
-(1, 2, 'dientes', 'Ajo'),
-(1, 1, 'unidad', 'Zanahoria'),
-(1, 2, 'tazas', 'Caldo de verduras');
-
--- Insertar ingredientes para Tacos de Pollo
-INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
-(7, 2, 'tazas', 'Pollo deshebrado'),
-(7, 4, 'unidad', 'Tortillas de maíz'),
-(7, 0.5, 'taza', 'Cebolla picada'),
-(7, 0.5, 'taza', 'Cilantro picado');
-
-"""
-
 def abrir_recetas():    
     # Crear la ventana principal
     global root
@@ -438,7 +500,7 @@ def abrir_recetas():
 
     # Ejecutar el bucle principal de la aplicación
     root.mainloop()
-
+"""
 def destruir(texto,root) :
     from funcionalidad import seleccionar_opcion
     root.destroy()
@@ -446,3 +508,49 @@ def destruir(texto,root) :
     print("se elimino") 
     time.sleep(1)
     seleccionar_opcion(texto)
+
+
+"""
+USE prueba;
+
+
+-- Crear la tabla de recetas
+CREATE TABLE recetas (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Elaboracion TEXT NOT NULL
+);
+
+
+
+CREATE TABLE IF NOT EXISTS ingredientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    receta_id INT,
+    cantidad FLOAT NOT NULL,
+    unidad VARCHAR(50) NOT NULL,
+    ingrediente VARCHAR(255) NOT NULL,
+    FOREIGN KEY (receta_id) REFERENCES recetas(id) ON DELETE CASCADE
+);
+
+
+-- Insertar receta
+INSERT INTO receta (nombre, elaboracion) VALUES 
+('Guiso de Lentejas', 'Cocinar las lentejas con verduras y especias hasta que estén tiernas.'),
+('Tacos de Pollo', 'Rellenar tortillas de maíz con pollo deshebrado, cebolla y cilantro.');
+
+-- Insertar ingredientes para Guiso de Lentejas
+INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
+(1, 1.5, 'tazas', 'Lentejas'),
+(1, 1, 'unidad', 'Cebolla'),
+(1, 2, 'dientes', 'Ajo'),
+(1, 1, 'unidad', 'Zanahoria'),
+(1, 2, 'tazas', 'Caldo de verduras');
+
+-- Insertar ingredientes para Tacos de Pollo
+INSERT INTO ingredientes (receta_id, cantidad, unidad, ingrediente) VALUES 
+(7, 2, 'tazas', 'Pollo deshebrado'),
+(7, 4, 'unidad', 'Tortillas de maíz'),
+(7, 0.5, 'taza', 'Cebolla picada'),
+(7, 0.5, 'taza', 'Cilantro picado');
+
+"""
