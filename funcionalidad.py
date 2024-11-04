@@ -11,14 +11,6 @@ def seleccionar_opcion(opcion):
         from Pagina_principal import abrir_pagina_principal  # Importa solo cuando se necesite
         print("Abriendo página principal...")
         abrir_pagina_principal()
-
-    elif opcion == "Reportes":
-        from Reportes import abrir_interfaz_Reportes  # Importa solo cuando se necesite
-        print("Abriendo interfaz de reportes...")
-        abrir_interfaz_Reportes()
-
-    elif opcion == "Estadísticas":
-        print("abriendo Estadisticas")
     elif opcion == "Usuarios":
         from usuarios import abrir_usuarios
         print("abriendo Usuarios")

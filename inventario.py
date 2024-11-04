@@ -505,12 +505,10 @@ def abrir_inventario():
     # Crear las opciones del menú lateral
     opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
-        {"texto": "Reportes", "icono": "📊"},
-        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
         {"texto": "Usuarios", "icono": "👤"},
         {"texto": "Tareas", "icono": "📝"},
-        {"texto": "Reservas", "icono": "📅"},
-        {"texto": "Inventario", "icono": "📦"}
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"}
     ]
 
     # Crear los botones en el menú lateral

@@ -247,7 +247,7 @@ def abrir_usuarios():
     menu_frame.pack(side="left", fill="y")
 
     # Opciones del menú lateral
-    menu_options = ["Recompensas", "Reportes", "Estadísticas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+    menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas"]
     for option in menu_options:
         button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
         button.pack(fill="x", padx=10, pady=5)

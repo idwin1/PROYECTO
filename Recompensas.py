@@ -8,45 +8,20 @@ from tkinter import ttk
 
 
 def abrir_interfaz_Recompensas():
-    # Crear la ventana principal
     root = tk.Tk()
-    root.title('Recompensas')
-    root.geometry('925x500+300+200')
-    root.configure(bg="#fff")
-    root.resizable(False, False)
+    root.title("Recompensas")
+    root.geometry("650x500")
 
-    # Crear el frame del menú lateral
-    menu_lateral = tk.Frame(root, bg="#f0f0f0", width=150)
-    menu_lateral.pack(side="left", fill="y")
+    # Crear el marco para el menú lateral
+    menu_frame = tk.Frame(root, bg="#333333", width=150)
+    menu_frame.pack(side="left", fill="y")
 
-    opciones_menu = [
-        # Crear las opciones del menú
-        {"texto": "Recompensas", "icono": "★"},
-        {"texto": "Reportes", "icono": "📊"},
-        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
-        {"texto": "Usuarios", "icono": "👤"},
-        {"texto": "Tareas", "icono": "📝"},
-        {"texto": "Inventario", "icono": "📦"}
-    ]
-
-    # Crear los botones en el menú lateral
-    for opcion in opciones_menu:
-        frame_opcion = tk.Frame(menu_lateral, bg="white")
-        frame_opcion.pack(fill="x", pady=1)
-
-        # Icono y texto de la opción
-        etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="white")
-        etiqueta.pack(fill="x")
-
-        # Si hay una notificación, mostrarla como un punto rojo
-        if opcion.get("notificacion"):
-            notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="white", anchor="e")
-            notificacion.pack(side="right", padx=5)
-
-        # Agregar evento para seleccionar opción
-        ventana = root
-        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto,ventana))
-
+    # Opciones del menú lateral
+    menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+    for option in menu_options:
+        button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
+        button.pack(fill="x", padx=10, pady=5)
+        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root))
     root.mainloop()
 
 def destruir(texto,root):

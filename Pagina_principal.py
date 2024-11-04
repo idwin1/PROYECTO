@@ -14,14 +14,12 @@ root.configure(bg="#fff")
 root.resizable(False, False)
 
 # Crear el frame del menú lateral
-menu_lateral = tk.Frame(root, bg="#f0f0f0", width=150)
+menu_lateral = tk.Frame(root, bg="#333333", width=150)
 menu_lateral.pack(side="left", fill="y")
 
 # Crear las opciones del menú
 opciones_menu = [
     {"texto": "Recompensas", "icono": "★"},
-    {"texto": "Reportes", "icono": "📊"},
-    {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
     {"texto": "Usuarios", "icono": "👤"},
     {"texto": "Tareas", "icono": "📝"},
     {"texto": "Inventario", "icono": "📦"},
@@ -30,22 +28,21 @@ opciones_menu = [
 
 # Crear los botones en el menú lateral
 for opcion in opciones_menu:
-    frame_opcion = tk.Frame(menu_lateral, bg="white")
+    frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
     frame_opcion.pack(fill="x", pady=1)
-
     # Icono y texto de la opción
-    etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="white")
+    etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
+                     bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
     etiqueta.pack(fill="x")
-
     # Si hay una notificación, mostrarla como un punto rojo
     if opcion.get("notificacion"):
-        notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="white", anchor="e")
+        notificacion = Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
         notificacion.pack(side="right", padx=5)
-
     # Agregar evento para seleccionar opción
-    etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto))
+    ventana = root
+    etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
 
-def destruir(texto) :
+def destruir(texto,ventana) :
     from funcionalidad import seleccionar_opcion
     root.destroy()
     print("entro a pagina principal")
