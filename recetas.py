@@ -71,7 +71,8 @@ def abrir_recetas():
         {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
         {"texto": "Usuarios", "icono": "👤"},
         {"texto": "Tareas", "icono": "📝"},
-        {"texto": "Inventario", "icono": "📦"}
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"}
     ]
 
     for opcion in opciones_menu:

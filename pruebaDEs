@@ -1,90 +1,149 @@
-import asyncio
-import tkinter as tk
+import time
+from tkinter import *
 from tkinter import messagebox
-from bleak import BleakScanner, BleakClient
-import threading
+from PIL import Image, ImageTk  # Importamos Pillow
+from funcionalidad import seleccionar_opcion
+import tkinter as tk
+from tkinter import ttk
 
-# UUIDs específicas de Particle Photon 2 (deberías reemplazarlas por las correctas)
-SERVICE_UUID = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # Reemplazar por el UUID del servicio del Photon
-CHARACTERISTIC_UUID = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  # Reemplazar por el UUID de la característica
+def cargarDatos():
+    from conexion_bd import conexion
+    conn = conexion()
+    cursor = conn.cursor()
+    
+    # Consulta para obtener los datos
+    cursor.execute("SELECT id, usuario, contrasena, rol FROM usuarios")
+    resultados = cursor.fetchall()
 
-# Variable global para mantener la dirección del dispositivo seleccionado
-dispositivo_seleccionado = None
+    # Limpiar la tabla antes de insertar nuevos datos
+    for row in tree.get_children():
+        tree.delete(row)
 
-# Función asíncrona para buscar dispositivos Bluetooth
-async def buscar_dispositivos_async():
-    dispositivos = await BleakScanner.discover()
-    lista_dispositivos.delete(0, tk.END)
-    if dispositivos:
-        for dispositivo in dispositivos:
-            lista_dispositivos.insert(tk.END, f"{dispositivo.name or 'Desconocido'} ({dispositivo.address})")
-    else:
-        messagebox.showinfo("Resultado", "No se encontraron dispositivos")
+    # Insertar cada fila en el Treeview
+    for fila in resultados:
+        tree.insert("", "end", values=fila)
 
-# Función para ejecutar la búsqueda en un hilo separado
-def iniciar_busqueda():
-    boton_buscar.config(state=tk.DISABLED)
-    hilo = threading.Thread(target=ejecutar_busqueda)
-    hilo.start()
+    # Cerrar la conexión
+    cursor.close()
+    conn.close()
 
-# Función que ejecuta el bucle asyncio en el hilo separado
-def ejecutar_busqueda():
-    loop = asyncio.new_event_loop()  # Crear un nuevo bucle de eventos
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(buscar_dispositivos_async())
-    boton_buscar.config(state=tk.NORMAL)
+def abrir_ventana_edicion(accion):
+    # Obtener el usuario seleccionado
+    selected_item = tree.focus()
+    if not selected_item and accion != "Agregar":
+        messagebox.showwarning("Advertencia", "Selecciona un usuario para " + accion.lower())
+        return
 
-# Función para conectar con el dispositivo seleccionado
-async def conectar_dispositivo_async(address):
-    async with BleakClient(address) as client:
-        try:
-            # Verificar si está conectado
-            if client.is_connected:
-                messagebox.showinfo("Conectado", f"Conectado a {address}")
-                
-                # Leer valor de la característica del servicio del Photon 2
-                valor = await client.read_gatt_char(CHARACTERISTIC_UUID)
-                messagebox.showinfo("Valor", f"Valor leído: {valor}")
-                
-                # Escribir en la característica (si es necesario)
-                # await client.write_gatt_char(CHARACTERISTIC_UUID, b'\x01')  # Ejemplo de escritura
-        except Exception as e:
-            messagebox.showerror("Error", f"No se pudo conectar: {str(e)}")
+    # Crear una nueva ventana
+    ventana_edicion = tk.Toplevel()
+    ventana_edicion.title(f"{accion} Usuario")
+    ventana_edicion.geometry("400x300")
 
-# Función para iniciar la conexión
-def conectar_dispositivo():
-    seleccion = lista_dispositivos.curselection()
-    if seleccion:
-        dispositivo = lista_dispositivos.get(seleccion[0])
-        global dispositivo_seleccionado
-        dispositivo_seleccionado = dispositivo.split("(")[-1].strip(")")
-        hilo = threading.Thread(target=ejecutar_conexion)
-        hilo.start()
-    else:
-        messagebox.showwarning("Advertencia", "Selecciona un dispositivo")
+    # Crear los campos de entrada
+    Label(ventana_edicion, text="ID:").grid(row=0, column=0, padx=10, pady=10)
+    id_entry = Entry(ventana_edicion)
+    id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-# Función para ejecutar la conexión en un hilo separado
-def ejecutar_conexion():
-    if dispositivo_seleccionado:
-        loop = asyncio.new_event_loop()  # Crear un nuevo bucle de eventos
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(conectar_dispositivo_async(dispositivo_seleccionado))
+    Label(ventana_edicion, text="Usuario:").grid(row=1, column=0, padx=10, pady=10)
+    usuario_entry = Entry(ventana_edicion)
+    usuario_entry.grid(row=1, column=1, padx=10, pady=10)
 
-# Crear ventana principal
-ventana = tk.Tk()
-ventana.title("Conectar Bluetooth (Particle Photon 2)")
+    Label(ventana_edicion, text="Contraseña:").grid(row=2, column=0, padx=10, pady=10)
+    contrasena_entry = Entry(ventana_edicion)
+    contrasena_entry.grid(row=2, column=1, padx=10, pady=10)
 
-# Crear botón para buscar dispositivos
-boton_buscar = tk.Button(ventana, text="Buscar Dispositivos", command=iniciar_busqueda)
-boton_buscar.pack(pady=10)
+    Label(ventana_edicion, text="Rol:").grid(row=3, column=0, padx=10, pady=10)
+    rol_entry = Entry(ventana_edicion)
+    rol_entry.grid(row=3, column=1, padx=10, pady=10)
 
-# Crear lista para mostrar dispositivos
-lista_dispositivos = tk.Listbox(ventana, width=50)
-lista_dispositivos.pack(pady=10)
+    # Si no es "Agregar", cargar los datos del usuario seleccionado
+    if accion != "Agregar":
+        datos = tree.item(selected_item, "values")
+        id_entry.insert(0, datos[0])
+        usuario_entry.insert(0, datos[1])
+        contrasena_entry.insert(0, datos[2])
+        rol_entry.insert(0, datos[3])
+        
+        # Si es "Actualizar" o "Eliminar", bloquear el campo de ID
+        id_entry.config(state="readonly")
+        if accion == "Eliminar":
+            usuario_entry.config(state="readonly")
+            contrasena_entry.config(state="readonly")
+            rol_entry.config(state="readonly")
 
-# Crear botón para conectar al dispositivo seleccionado
-boton_conectar = tk.Button(ventana, text="Conectar", command=conectar_dispositivo)
-boton_conectar.pack(pady=10)
+    # Botón de acción en la ventana de edición
+    def realizar_accion():
+        if accion == "Agregar":
+            # Código para agregar un nuevo usuario
+            pass
+        elif accion == "Actualizar":
+            # Código para actualizar el usuario seleccionado
+            pass
+        elif accion == "Eliminar":
+            # Código para eliminar el usuario seleccionado
+            pass
+        ventana_edicion.destroy()
 
-# Iniciar el bucle de la interfaz
-ventana.mainloop()
+    # Botón para confirmar la acción
+    confirmar_button = tk.Button(ventana_edicion, text=accion, command=realizar_accion)
+    confirmar_button.grid(row=4, column=0, columnspan=2, pady=20)
+
+def abrir_usuarios():   
+    global tree 
+    global root
+    # Crear la ventana principal
+    root = tk.Tk()
+    root.title("Usuarios")
+    root.geometry("800x600")
+
+    # Crear el marco para el menú lateral
+    menu_frame = tk.Frame(root, bg="#333333", width=150)
+    menu_frame.pack(side="left", fill="y")
+
+    # Opciones del menú lateral
+    menu_options = ["Recompensas", "Reportes", "Estadísticas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+    for option in menu_options:
+        button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
+        button.pack(fill="x", padx=10, pady=5)
+        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root))
+
+    # Crear el marco principal para la tabla y los botones
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(side="right", fill="both", expand=True)
+
+    # Título
+    title_label = tk.Label(main_frame, text="usuarios", bg="white", font=("Arial", 14))
+    title_label.pack(pady=10)
+
+    # Crear la tabla usando Treeview
+    global tree
+    columns = ("ID", "Usuario", "Contraseña", "Rol")
+    tree = ttk.Treeview(main_frame, columns=columns, show="headings", height=8)
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=100, anchor="center")
+    tree.pack(pady=20)
+
+    # Crear botones de acción
+    button_frame = tk.Frame(main_frame, bg="white")
+    button_frame.pack(pady=10)
+
+    add_button = tk.Button(button_frame, text="AGREGAR USUARIO", bg="#28A745", fg="white", font=("Arial", 10), width=20, command=lambda: abrir_ventana_edicion("Agregar"))
+    add_button.grid(row=0, column=0, padx=5)
+
+    update_button = tk.Button(button_frame, text="ACTUALIZAR USUARIO", bg="#FFC107", fg="black", font=("Arial", 10), width=20, command=lambda: abrir_ventana_edicion("Actualizar"))
+    update_button.grid(row=0, column=1, padx=5)
+
+    delete_button = tk.Button(button_frame, text="ELIMINAR USUARIO", bg="#DC3545", fg="white", font=("Arial", 10), width=20, command=lambda: abrir_ventana_edicion("Eliminar"))
+    delete_button.grid(row=0, column=2, padx=5)
+
+    cargarDatos()
+    root.mainloop()
+
+def destruir(texto, root):
+    from funcionalidad import seleccionar_opcion
+    root.destroy()
+    print("texto")
+    time.sleep(1)
+    seleccionar_opcion(texto)
+
