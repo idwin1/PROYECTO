@@ -6,49 +6,56 @@ from funcionalidad import seleccionar_opcion
 import tkinter as tk
 from tkinter import ttk
 
+def abrir_tareas(rol):
+    # Crear la ventana principal
+    root = tk.Tk()
+    root.title('Tareas')
+    root.geometry('950x500+300+200')
+    root.configure(bg="#f4f4f9")
+    root.resizable(False, False)
 
-# Crear la ventana principal
-root = tk.Tk()
-root.title('prueba copia')
-root.geometry('925x500+300+200')
-root.configure(bg="#fff")
-root.resizable(False, False)
+    menu_lateral = tk.Frame(root, bg="#333", width=150)
+    menu_lateral.pack(side="left", fill="y")
+    frame_central = Frame(root, bg="#fff")
+    frame_central.pack(side="right", expand=True, fill="both")
 
-# Crear el frame del menú lateral
-menu_lateral = tk.Frame(root, bg="#f0f0f0", width=150)
-menu_lateral.pack(side="left", fill="y")
 
-# Crear las opciones del menú
-opciones_menu = [
-    {"texto": "Recompensas", "icono": "★"},
-    {"texto": "Reportes", "icono": "📊"},
-    {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
-    {"texto": "Usuarios", "icono": "👤"},
-    {"texto": "Tareas", "icono": "📝"},
-    {"texto": "Inventario", "icono": "📦"}
-]
+    # Crear las opciones del menú
+    if rol == "A":
+            opciones_menu = [
+            {"texto": "Recompensas", "icono": "★"},
+            {"texto": "Usuarios", "icono": "👤"},
+            {"texto": "Tareas", "icono": "📝"},
+            {"texto": "Inventario", "icono": "📦"},
+            {"texto": "Recetas", "icono": "🗒️"}
+            ]
+    else:
+        opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"}
+        ]
 
-# Crear los botones en el menú lateral
-for opcion in opciones_menu:
-    frame_opcion = tk.Frame(menu_lateral, bg="white")
-    frame_opcion.pack(fill="x", pady=1)
+    # Crear los botones en el menú lateral
+    for opcion in opciones_menu:
+        frame_opcion = tk.Frame(menu_lateral, bg="#333")
+        frame_opcion.pack(fill="x", pady=1)
 
-    # Icono y texto de la opción
-    etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="white")
-    etiqueta.pack(fill="x")
+        etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, bg="#333", fg="#fff", font=('Helvetica', 10, 'bold'))
+        etiqueta.pack(fill="x")
 
-    # Si hay una notificación, mostrarla como un punto rojo
-    if opcion.get("notificacion"):
-        notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="white", anchor="e")
-        notificacion.pack(side="right", padx=5)
+        if opcion.get("notificacion"):
+            notificacion = tk.Label(frame_opcion, text="●", fg="red", bg="#333", anchor="e")
+            notificacion.pack(side="right", padx=5)
 
-    # Agregar evento para seleccionar opción
-    etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto))
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
+    root.mainloop()
 
-def destruir(texto) :
+def destruir(texto,root,rol) :
     root.destroy()
-    seleccionar_opcion(texto)
+    seleccionar_opcion(texto,rol)
     print("se elimino")
     
 # Ejecutar el bucle principal de la aplicación
-root.mainloop()

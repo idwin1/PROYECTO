@@ -486,7 +486,7 @@ def abrir_inventario():
 
 from tkinter import Tk, Frame, Label, Button
 
-def abrir_inventario():
+def abrir_inventario(rol):
     global root
     root = Tk()
     root.title("Gestión de Inventario")
@@ -503,9 +503,17 @@ def abrir_inventario():
     frame_central.pack(side="right", expand=True, fill="both")
 
     # Crear las opciones del menú lateral
-    opciones_menu = [
+    if rol == "A":
+        opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
         {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"}
+        ]
+    else:
+        opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"}
@@ -528,7 +536,7 @@ def abrir_inventario():
 
         # Agregar evento para seleccionar opción
         ventana = root
-        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
 
     # Crear el frame inferior para el nuevo menú
     menu_inferior = Frame(root, bg="#333333", height=50)  # Fondo gris oscuro
@@ -547,10 +555,10 @@ def abrir_inventario():
 
 
 
-def destruir(texto,root) :
+def destruir(texto,root,rol) :
     from funcionalidad import seleccionar_opcion
     root.destroy()
     # Añadir más opciones según el menú
     print("se elimino") 
     time.sleep(1)
-    seleccionar_opcion(texto)
+    seleccionar_opcion(texto,rol)

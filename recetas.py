@@ -52,7 +52,7 @@ def mostrar_recetas(frame_central):
 
     actualizar_tabla(tree)
 
-def abrir_recetas():
+def abrir_recetas(rol):
     global root
     root = tk.Tk()
     root.title('Recetas')
@@ -65,11 +65,17 @@ def abrir_recetas():
     frame_central = Frame(root, bg="#fff")
     frame_central.pack(side="right", expand=True, fill="both")
 
-    opciones_menu = [
+    if rol == "A":
+        opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
-        {"texto": "Reportes", "icono": "📊"},
-        {"texto": "Estadísticas", "icono": "📈", "notificacion": True},
         {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"}
+        ]
+    else:
+        opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"}
@@ -87,7 +93,7 @@ def abrir_recetas():
             notificacion.pack(side="right", padx=5)
 
         ventana = root
-        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana))
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
 
     menu_inferior = Frame(root, bg="#333", height=50)
     menu_inferior.pack(side="bottom", fill="x")
@@ -490,13 +496,13 @@ def abrir_recetas():
     # Ejecutar el bucle principal de la aplicación
     root.mainloop()
 """
-def destruir(texto,root) :
+def destruir(texto,root,rol) :
     from funcionalidad import seleccionar_opcion
     root.destroy()
     # Añadir más opciones según el menú
     print("se elimino") 
     time.sleep(1)
-    seleccionar_opcion(texto)
+    seleccionar_opcion(texto,rol)
 
 
 """

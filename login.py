@@ -97,16 +97,16 @@ def login():
         cursor = connection.cursor()
 
         # Verificar usuario en la base de datos (ejemplo simple, asegúrate de tener la tabla `usuarios`)
-        query = "SELECT usuario, contrasena FROM usuarios WHERE usuario=%s AND contrasena=%s"
+        query = "SELECT usuario, contrasena, rol FROM usuarios WHERE usuario=%s AND contrasena=%s"
         cursor.execute(query, (Nom, contr))
         result = cursor.fetchone()
-
-
+        rol = result[2]
+        print(rol)
         if result:
             messagebox.showinfo("Éxito", "Inicio de sesión exitoso.")
             from funcionalidad import seleccionar_opcion  # Importar la función que manejará la selección de opción
             root.destroy()  # Destruir la ventana actual
-            seleccionar_opcion(texto)  # Llamar a la función para abrir la nueva ventana
+            seleccionar_opcion(texto,rol)  # Llamar a la función para abrir la nueva ventana
         else:
             messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos.")
     

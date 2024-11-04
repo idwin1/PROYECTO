@@ -234,7 +234,7 @@ def abrir_ventana_edicion(accion):
     confirmar_button = tk.Button(ventana_edicion, text=accion, command=realizar_accion)
     confirmar_button.grid(row=4, column=0, columnspan=2, pady=20)
 
-def abrir_usuarios():   
+def abrir_usuarios(rol):   
     global tree 
     global root
     # Crear la ventana principal
@@ -247,11 +247,15 @@ def abrir_usuarios():
     menu_frame.pack(side="left", fill="y")
 
     # Opciones del menú lateral
-    menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+    if rol == "A":
+        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+    else:
+        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas"]
+
     for option in menu_options:
         button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
         button.pack(fill="x", padx=10, pady=5)
-        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root))
+        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root,rol))
 
     # Crear el marco principal para la tabla y los botones
     main_frame = tk.Frame(root, bg="white")
@@ -286,10 +290,11 @@ def abrir_usuarios():
     cargarDatos()
     root.mainloop()
 
-def destruir(texto, root):
+def destruir(texto, root,rol):
     from funcionalidad import seleccionar_opcion
     root.destroy()
     print("texto")
+    print(rol)
     time.sleep(1)
-    seleccionar_opcion(texto)
+    seleccionar_opcion(texto,rol)
 
