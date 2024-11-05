@@ -31,7 +31,7 @@ def seleccionar_opcion(opcion,rol):
         from pos import abrir_puntoVentas
         print("abriendo punto de ventas")
         abrir_puntoVentas()
-    elif opcion == "Cerrar secion":
+    elif opcion == "Cerrar sesión":
         from login import abrir_login
         print("Cerrando secion")
         abrir_login()

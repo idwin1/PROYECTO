@@ -54,6 +54,7 @@ def mostrar_recetas(frame_central):
 
 def abrir_recetas(rol):
     global root
+    global frame_central
     root = tk.Tk()
     root.title('Recetas')
     root.geometry('950x500+300+200')
@@ -73,7 +74,7 @@ def abrir_recetas(rol):
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"},
         {"texto": "Punto ventas", "icono": "🗒️"},
-        {"texto": "Cerrar secion", "icono": "🗒️"}
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
         ]
     else:
         opciones_menu = [
@@ -82,7 +83,7 @@ def abrir_recetas(rol):
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"},
         {"texto": "Punto ventas", "icono": "🗒️"},
-        {"texto": "Cerrar secion", "icono": "🗒️"}
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
     ]
 
     for opcion in opciones_menu:
@@ -108,8 +109,10 @@ def abrir_recetas(rol):
         boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#5DADE2", fg="white", font=('Helvetica', 12), borderwidth=0,
                        command=lambda t=texto: mostrar_recetas(frame_central))
         boton.pack(side="left", padx=20)
-
+    root.after(5000, lambda: mostrar_recetas(frame_central))
     root.mainloop()
+
+abrir_recetas("A")
 
 
 """

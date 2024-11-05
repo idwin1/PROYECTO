@@ -248,9 +248,9 @@ def abrir_usuarios(rol):
 
     # Opciones del menú lateral
     if rol == "A":
-        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar secion"]
+        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar sesión"]
     else:
-        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar secion"]
+        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar sesión"]
 
     for option in menu_options:
         button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
