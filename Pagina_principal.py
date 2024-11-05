@@ -26,7 +26,7 @@ def abrir_pagina_principal(rol):
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"},
         {"texto": "Punto ventas", "icono": "🗒️"},
-        {"texto": "Cerrar secion", "icono": "🗒️"}
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
         ]
     else:
         opciones_menu = [
@@ -35,7 +35,7 @@ def abrir_pagina_principal(rol):
         {"texto": "Inventario", "icono": "📦"},
         {"texto": "Recetas", "icono": "🗒️"},
         {"texto": "Punto ventas", "icono": "🗒️"},
-        {"texto": "Cerrar secion", "icono": "🗒️"}
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
     ]
 
 
