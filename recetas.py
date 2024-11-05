@@ -6,12 +6,6 @@ import time
 import tkinter as tk
 from tkinter import ttk
 # Función para mostrar la interfaz de recetas en el área central
-from tkinter import *
-from tkinter import messagebox, ttk
-from tkinter import simpledialog
-import mysql.connector
-import time
-import tkinter as tk
 
 def mostrar_recetas(frame_central):
     for widget in frame_central.winfo_children():
@@ -109,10 +103,10 @@ def abrir_recetas(rol):
         boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#5DADE2", fg="white", font=('Helvetica', 12), borderwidth=0,
                        command=lambda t=texto: mostrar_recetas(frame_central))
         boton.pack(side="left", padx=20)
-    root.after(5000, lambda: mostrar_recetas(frame_central))
+    root.after(1000, lambda: mostrar_recetas(frame_central))
     root.mainloop()
 
-abrir_recetas("A")
+#abrir_recetas("A")
 
 
 """
