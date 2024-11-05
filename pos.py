@@ -13,8 +13,8 @@ class PuntoDeVenta:
         self.db = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Wario2400_",  # Cambia esto a la contraseña correspondiente
-            database="prueba"
+            password="sandrauno",  # Cambia esto a la contraseña correspondiente
+            database="cafe"
         )
         self.cursor = self.db.cursor()
         
@@ -130,9 +130,12 @@ class PuntoDeVenta:
         messagebox.showinfo("Ventas", "Mostrando ventas")
 
 # Configuración y ejecución de la interfaz
-root = Tk()
-app = PuntoDeVenta(root)
-root.mainloop()
+
+def abrir_puntoVentas():
+    root = Tk()
+    app = PuntoDeVenta(root)
+    root.mainloop()
+
 
 
 """

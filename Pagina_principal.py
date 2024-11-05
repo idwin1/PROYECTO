@@ -24,14 +24,18 @@ def abrir_pagina_principal(rol):
         {"texto": "Usuarios", "icono": "👤"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
         ]
     else:
         opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
     ]
 
 

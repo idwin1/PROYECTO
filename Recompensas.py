@@ -18,9 +18,9 @@ def abrir_interfaz_Recompensas(rol):
 
     # Opciones del menú lateral
     if rol == "A":
-        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas"]
+        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar secion"]
     else:
-        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas"]
+        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar secion"]
         
     for option in menu_options:
         button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")

@@ -27,5 +27,13 @@ def seleccionar_opcion(opcion,rol):
         from recetas import abrir_recetas
         print("abriendo Recetas")
         abrir_recetas(rol)
+    elif opcion == "Punto ventas":
+        from pos import abrir_puntoVentas
+        print("abriendo punto de ventas")
+        abrir_puntoVentas()
+    elif opcion == "Cerrar secion":
+        from login import abrir_login
+        print("Cerrando secion")
+        abrir_login()
     else:
         print(f"No se encontró la opción: {opcion}")

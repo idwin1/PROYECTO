@@ -509,14 +509,18 @@ def abrir_inventario(rol):
         {"texto": "Usuarios", "icono": "👤"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
         ]
     else:
         opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
     ]
 
     # Crear los botones en el menú lateral

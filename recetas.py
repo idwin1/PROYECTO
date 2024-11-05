@@ -71,14 +71,18 @@ def abrir_recetas(rol):
         {"texto": "Usuarios", "icono": "👤"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
         ]
     else:
         opciones_menu = [
         {"texto": "Recompensas", "icono": "★"},
         {"texto": "Tareas", "icono": "📝"},
         {"texto": "Inventario", "icono": "📦"},
-        {"texto": "Recetas", "icono": "🗒️"}
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar secion", "icono": "🗒️"}
     ]
 
     for opcion in opciones_menu:
@@ -165,7 +169,7 @@ def buscar_receta(tree, termino_busqueda):
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "SELECT r.ID, r.Nombre, GROUP_CONCAT(CONCAT(i.cantidad, ' ', i.unidad, ' ', i.ingrediente) SEPARATOR ', ') AS Ingredientes,  r.Elaboracion FROM receta r JOIN ingredientes i ON r.ID = i.receta_id WHERE r.Nombre LIKE %s OR r.ID LIKE %s GROUP BY r.ID, r.Nombre, r.Elaboracion;"
+        query = "SELECT r.ID, r.Nombre, GROUP_CONCAT(CONCAT(i.cantidad, ' ', i.unidad, ' ', i.ingrediente) SEPARATOR ', ') AS Ingredientes,  r.Elaboracion FROM recetas r JOIN ingredientes i ON r.ID = i.receta_id WHERE r.Nombre LIKE %s OR r.ID LIKE %s GROUP BY r.ID, r.Nombre, r.Elaboracion;"
         termino = f"%{termino_busqueda}%"
         cursor.execute(query, (termino, termino))
         recetas = cursor.fetchall()
@@ -189,7 +193,7 @@ def actualizar_tabla(tree):
         conn = conexion()
         cursor = conn.cursor()
 
-        query = "SELECT r.ID, r.Nombre, GROUP_CONCAT(CONCAT(i.cantidad, ' ', i.unidad, ' ', i.ingrediente) SEPARATOR ', ') AS Ingredientes, r.Elaboracion FROM receta r JOIN ingredientes i ON r.ID = i.receta_id GROUP BY r.ID, r.Nombre, r.Elaboracion;"
+        query = "SELECT r.ID, r.Nombre, GROUP_CONCAT(CONCAT(i.cantidad, ' ', i.unidad, ' ', i.ingrediente) SEPARATOR ', ') AS Ingredientes, r.Elaboracion FROM recetas r JOIN ingredientes i ON r.ID = i.receta_id GROUP BY r.ID, r.Nombre, r.Elaboracion;"
         cursor.execute(query)
         recetas = cursor.fetchall()
 
@@ -274,7 +278,7 @@ def agregar_receta(nombre_receta, ingredientes, elaboracion, tree, ventana_agreg
         cursor = conn.cursor()
 
         # Insertar la receta en la tabla `receta`
-        query = "INSERT INTO receta (Nombre, Elaboracion) VALUES (%s, %s)"
+        query = "INSERT INTO recetas (Nombre, Elaboracion) VALUES (%s, %s)"
         cursor.execute(query, (nombre_receta, elaboracion))
         conn.commit()
 
@@ -384,7 +388,7 @@ def modificar_receta(id_receta, nombre_receta, ingredientes, elaboracion, tree):
         cursor = conn.cursor()
 
         # Actualizar la receta
-        query = "UPDATE receta SET Nombre = %s, Elaboracion = %s WHERE id = %s"
+        query = "UPDATE recetas SET Nombre = %s, Elaboracion = %s WHERE id = %s"
         cursor.execute(query, (nombre_receta, elaboracion, id_receta))
 
         # Actualizar o insertar los ingredientes asociados
@@ -421,7 +425,7 @@ def eliminar_receta(tree):
             cursor = conn.cursor()
 
             # Ejecutar las consultas de eliminación
-            cursor.execute("DELETE FROM receta WHERE id = %s", (id_receta,))
+            cursor.execute("DELETE FROM recetas WHERE id = %s", (id_receta,))
             cursor.execute("DELETE FROM ingredientes WHERE receta_id = %s", (id_receta,))
             conn.commit()
 
