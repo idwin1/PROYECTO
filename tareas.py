@@ -354,5 +354,4 @@ def destruir(texto,root,rol) :
     seleccionar_opcion(texto,rol)
     print("se elimino")
 # Ejecuta la función de abrir_tareas con un rol de ejemplo
-abrir_tareas('A')
 

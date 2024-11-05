@@ -103,7 +103,7 @@ def abrir_recetas(rol):
         boton = Button(menu_inferior, text=texto, padx=10, pady=5, bg="#5DADE2", fg="white", font=('Helvetica', 12), borderwidth=0,
                        command=lambda t=texto: mostrar_recetas(frame_central))
         boton.pack(side="left", padx=20)
-    root.after(1000, lambda: mostrar_recetas(frame_central))
+    root.after(250, lambda: mostrar_recetas(frame_central))
     root.mainloop()
 
 #abrir_recetas("A")
