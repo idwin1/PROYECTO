@@ -128,15 +128,25 @@ class PuntoDeVenta:
     def mostrar_ventas(self):
         # Mostrar ventas (ejemplo)
         messagebox.showinfo("Ventas", "Mostrando ventas")
-
+    
+    
 # Configuración y ejecución de la interfaz
 
-def abrir_puntoVentas():
+
+def abrir_puntoVentas(rol):
+    global root
+    global role 
+    role = rol
     root = Tk()
     app = PuntoDeVenta(root)
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     root.mainloop()
 
-
+def on_closing():
+    from funcionalidad import seleccionar_opcion  
+    print("La ventana se ha cerrado.")  
+    root.destroy()
+    seleccionar_opcion("pagina_principal",role)  
 
 """
 CREATE TABLE precios_productos (

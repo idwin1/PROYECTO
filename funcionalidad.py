@@ -30,7 +30,7 @@ def seleccionar_opcion(opcion,rol):
     elif opcion == "Punto ventas":
         from pos import abrir_puntoVentas
         print("abriendo punto de ventas")
-        abrir_puntoVentas()
+        abrir_puntoVentas(rol)
     elif opcion == "Cerrar sesión":
         from login import abrir_login
         print("Cerrando secion")
