@@ -356,6 +356,7 @@ def abrir_usuarios(rol):
     global root
     # Crear la ventana principal
     root = tk.Tk()
+    root.iconbitmap("usuarios.ico")
     root.title("Usuarios")
     root.geometry("800x600")
 

@@ -8,6 +8,7 @@ from tkinter import ttk
 def abrir_pagina_principal(rol):  
 # Crear la ventana principal
     root = tk.Tk()
+    root.iconbitmap("pagina_principal.ico")
     root.title('Pagina_Principal')
     root.geometry('925x500+300+200')
     root.configure(bg="#fff")

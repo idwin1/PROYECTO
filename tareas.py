@@ -89,6 +89,7 @@ def cargar_tareas(tabla):
 
 def abrir_tareas(rol):
     root = tk.Tk()
+    root.iconbitmap("tareas.ico")
     root.title('Tareas')
     root.geometry('950x500+300+200')
     root.configure(bg="#f4f4f9")

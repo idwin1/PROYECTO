@@ -138,6 +138,7 @@ def abrir_puntoVentas(rol):
     global role 
     role = rol
     root = Tk()
+    root.iconbitmap("punto de ventas.ico")
     app = PuntoDeVenta(root)
     root.protocol("WM_DELETE_WINDOW", on_closing)
     root.mainloop()

@@ -489,6 +489,7 @@ from tkinter import Tk, Frame, Label, Button
 def abrir_inventario(rol):
     global root
     root = Tk()
+    root.iconbitmap("inventario.ico")
     root.title("Gestión de Inventario")
     root.geometry('925x500+300+200')
     root.configure(bg="#fff")

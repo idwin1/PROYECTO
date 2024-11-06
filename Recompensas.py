@@ -286,6 +286,7 @@ def abrir_interfaz_Recompensas(rol):
     global root
     # Crear la ventana principal
     root = tk.Tk()
+    root.iconbitmap("recompensa.ico")
     root.title("Recompensas")
 
     # Centrar la ventana principal

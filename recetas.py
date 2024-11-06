@@ -50,6 +50,7 @@ def abrir_recetas(rol):
     global root
     global frame_central
     root = tk.Tk()
+    root.iconbitmap("recetas.ico")
     root.title('Recetas')
     root.geometry('950x500+300+200')
     root.configure(bg="#f4f4f9")

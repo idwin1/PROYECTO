@@ -9,6 +9,7 @@ import os
 def abrir_login():
     # Crear ventana principal
     root = Tk()
+    root.iconbitmap("login.ico")
     root.title('Acceso')
     root.geometry('925x500+300+200')
     root.configure(bg="#fff")
