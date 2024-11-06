@@ -380,7 +380,7 @@ def abrir_usuarios(rol):
     main_frame.pack(side="right", fill="both", expand=True)
 
     # Título
-    title_label = tk.Label(main_frame, text="usuarios", bg="white", font=("Arial", 14))
+    title_label = tk.Label(main_frame, text="Usuarios", bg="white", font=("Arial", 14))
     title_label.pack(pady=10)
 
     # Crear la tabla usando Treeview

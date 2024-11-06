@@ -51,36 +51,43 @@ def cargarRecompensas():
 def abrir_ventana_edicion(accion):
     # Obtener el usuario seleccionado
     ventana_edicion = tk.Toplevel()
-    ventana_edicion.geometry("400x300")
+    ventana_edicion.geometry("300x280")
+
+    # Colores y estilo
+    color_fondo = "#f7f2f2"
+    color_label = "#333"  # Azul para los labels
+    color_boton = "#e06666"  # Rojo para el botón
+    color_borde = "#ffd966"  # Amarillo para el borde del marco
+
 
     if accion == "Agregar":
         ventana_edicion.title("Agregar Usuario")
 
         # No crear campo para ID al agregar
-        Label(ventana_edicion, text="Nombre:").grid(row=0, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Nombre:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=10)
         usuario_entry = Entry(ventana_edicion)
         usuario_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Telefono:").grid(row=1, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Telefono:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=1, column=0, padx=10, pady=10)
         telefono_entry = Entry(ventana_edicion)
         telefono_entry.grid(row=1, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Correo:").grid(row=2, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Correo:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=2, column=0, padx=10, pady=10)
         correo_entry = Entry(ventana_edicion)
         correo_entry.grid(row=2, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Fecha Nacimiento:").grid(row=3, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Fecha Nacimiento:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=3, column=0, padx=10, pady=10)
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=3, column=1, padx=10, pady=10)
         
     elif accion == "Agregar Recompensa":
         ventana_edicion.title("Agregar Recompensa")
         # No crear campo para ID al agregar
-        Label(ventana_edicion, text="Recompensa:").grid(row=0, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Recompensa:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=10)
         recompensa_entry = Entry(ventana_edicion)
         recompensa_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Puntos:").grid(row=1, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Puntos:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=1, column=0, padx=10, pady=10)
         puntos_entry = Entry(ventana_edicion)
         puntos_entry.grid(row=1, column=1, padx=10, pady=10)
         
@@ -94,11 +101,11 @@ def abrir_ventana_edicion(accion):
         ventana_edicion.title("Actualizar Recompensas")
 
         # Crear campos y etiquetas
-        Label(ventana_edicion, text="Recompensa:").grid(row=0, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Recompensa:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=10)
         recompensa_entry = Entry(ventana_edicion)
         recompensa_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Puntos:").grid(row=1, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Puntos:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=1, column=0, padx=10, pady=10)
         puntos_entry = Entry(ventana_edicion)
         puntos_entry.grid(row=1, column=1, padx=10, pady=10)
 
@@ -116,23 +123,23 @@ def abrir_ventana_edicion(accion):
 
         ventana_edicion.title(f"{accion} Usuario")
         # Crear campo para ID y cargar datos del usuario seleccionado
-        Label(ventana_edicion, text="ID:").grid(row=0, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="ID:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=10)
         id_entry = Entry(ventana_edicion)
         id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Nombre:").grid(row=1, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Nombre:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=1, column=0, padx=10, pady=10)
         usuario_entry = Entry(ventana_edicion)
         usuario_entry.grid(row=1, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Telefono:").grid(row=2, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Telefono:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=2, column=0, padx=10, pady=10)
         telefono_entry = Entry(ventana_edicion)
         telefono_entry.grid(row=2, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Correo:").grid(row=3, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Correo:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=3, column=0, padx=10, pady=10)
         correo_entry = Entry(ventana_edicion)
         correo_entry.grid(row=3, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Fecha Nacimiento:").grid(row=4, column=0, padx=10, pady=10)
+        Label(ventana_edicion, text="Fecha Nacimiento:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=4, column=0, padx=10, pady=10)
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=4, column=1, padx=10, pady=10)
 
@@ -234,7 +241,8 @@ def abrir_ventana_edicion(accion):
         ventana_edicion.destroy()
 
     # Botón para realizar la acción
-    action_button = Button(ventana_edicion, text=accion, command=realizar_accion)
+    action_button = Button(ventana_edicion, text=accion, bg=color_boton,
+                           fg="white", font=("Arial", 12, "bold"),command=realizar_accion)
     action_button.grid(row=5, column=0, columnspan=2, pady=20)
 
 def eliminarRecompensa():
@@ -257,7 +265,6 @@ def eliminarRecompensa():
     messagebox.showinfo("Éxito", "Recompensa eliminada correctamente.")
     cursor.close()
     conn.close()
-
 
 def cargarRecompensas():
     from conexion_bd import conexion
@@ -403,3 +410,4 @@ def destruir(texto, root,rol):
     time.sleep(1)
     seleccionar_opcion(texto,rol)
 
+abrir_interfaz_Recompensas("A")
