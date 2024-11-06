@@ -136,6 +136,7 @@ def cargarDatos():
     cursor.close()
     conn.close()
 
+"""
 def abrir_ventana_edicion(accion):
     # Obtener el usuario seleccionado
     selected_item = tree.focus()
@@ -148,6 +149,16 @@ def abrir_ventana_edicion(accion):
     ventana_edicion.title(f"{accion} Usuario")
     ventana_edicion.geometry("400x300")
 
+    # Colores y estilo
+    color_fondo = "#f7f2f2"
+    color_label = "#333"  # Azul para los labels
+    color_boton = "#e06666"  # Rojo para el botón
+    color_borde = "#ffd966"  # Amarillo para el borde del marco
+   
+    # Marco para organización estética
+    marco = tk.Frame(ventana_edicion, bg=color_fondo, bd=2, relief="groove", padx=10, pady=10)
+    marco.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    
     # Crear los campos de entrada
     Label(ventana_edicion, text="ID:").grid(row=0, column=0, padx=10, pady=10)
     id_entry = Entry(ventana_edicion)
@@ -233,6 +244,112 @@ def abrir_ventana_edicion(accion):
     # Botón para confirmar la acción
     confirmar_button = tk.Button(ventana_edicion, text=accion, command=realizar_accion)
     confirmar_button.grid(row=4, column=0, columnspan=2, pady=20)
+"""
+
+def abrir_ventana_edicion(accion):
+    # Obtener el usuario seleccionado
+    selected_item = tree.focus()
+    if not selected_item and accion != "Agregar":
+        messagebox.showwarning("Advertencia", "Selecciona un usuario para " + accion.lower())
+        return
+
+    # Crear una nueva ventana
+    ventana_edicion = tk.Toplevel()
+    ventana_edicion.title(f"{accion} Usuario")
+    ventana_edicion.geometry("350x250")
+    ventana_edicion.configure(bg="#f7f2f2")  # Fondo claro
+
+    # Colores y estilo
+    color_fondo = "#f7f2f2"
+    color_label = "#333"  # Azul para los labels
+    color_boton = "#e06666"  # Rojo para el botón
+    color_borde = "#ffd966"  # Amarillo para el borde del marco
+
+    # Marco para organización estética
+    marco = tk.Frame(ventana_edicion, bg=color_fondo, bd=2, relief="groove", padx=10, pady=10)
+    marco.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    # Crear los campos de entrada con estilo
+    campos = ["ID", "Usuario", "Contraseña", "Rol"]
+    entradas = {}
+
+    for idx, campo in enumerate(campos):
+        lbl = tk.Label(marco, text=f"{campo}:", bg=color_fondo, fg=color_label, font=("Arial", 10, "bold"))
+        lbl.grid(row=idx, column=0, padx=10, pady=5, sticky="e")
+        
+        entrada = tk.Entry(marco, width=30)
+        entrada.grid(row=idx, column=1, padx=10, pady=5)
+        entradas[campo] = entrada
+
+    # Si no es "Agregar", cargar los datos del usuario seleccionado
+    if accion != "Agregar":
+        datos = tree.item(selected_item, "values")
+        entradas["ID"].insert(0, datos[0])
+        entradas["Usuario"].insert(0, datos[1])
+        entradas["Contraseña"].insert(0, datos[2])
+        entradas["Rol"].insert(0, datos[3])
+
+        # Si es "Actualizar" o "Eliminar", bloquear el campo de ID
+        entradas["ID"].config(state="readonly")
+        if accion == "Eliminar":
+            entradas["Usuario"].config(state="readonly")
+            entradas["Contraseña"].config(state="readonly")
+            entradas["Rol"].config(state="readonly")
+
+    # Función para realizar la acción
+    def realizar_accion():
+        from conexion_bd import conexion
+        conn = conexion()
+        cursor = conn.cursor()
+
+        if accion == "Agregar":
+            # Obtener datos de los campos de entrada
+            nuevo_usuario = entradas["Usuario"].get()
+            nueva_contrasena = entradas["Contraseña"].get()
+            nuevo_rol = entradas["Rol"].get()
+
+            # Consulta para agregar un nuevo usuario
+            cursor.execute("INSERT INTO usuarios (usuario, contrasena, rol) VALUES (%s, %s, %s)",
+                           (nuevo_usuario, nueva_contrasena, nuevo_rol))
+            conn.commit()
+            messagebox.showinfo("Éxito", "Usuario agregado correctamente.")
+
+        elif accion == "Actualizar":
+            # Obtener datos de los campos de entrada
+            id_usuario = entradas["ID"].get()
+            usuario_actualizado = entradas["Usuario"].get()
+            contrasena_actualizada = entradas["Contraseña"].get()
+            rol_actualizado = entradas["Rol"].get()
+
+            # Consulta para actualizar el usuario seleccionado
+            cursor.execute("UPDATE usuarios SET usuario=%s, contrasena=%s, rol=%s WHERE id=%s",
+                           (usuario_actualizado, contrasena_actualizada, rol_actualizado, id_usuario))
+            conn.commit()
+            cargarDatos()
+            messagebox.showinfo("Éxito", "Usuario actualizado correctamente.")
+
+        elif accion == "Eliminar":
+            # Obtener el ID del usuario a eliminar
+            id_usuario = entradas["ID"].get()
+
+            # Consulta para eliminar el usuario seleccionado
+            cursor.execute("DELETE FROM usuarios WHERE id=%s", (id_usuario,))
+            conn.commit()
+            cargarDatos()
+            messagebox.showinfo("Éxito", "Usuario eliminado correctamente.")
+
+        # Cerrar la conexión y destruir la ventana de edición
+        cursor.close()
+        conn.close()
+        cargarDatos()  # Recargar los datos en el Treeview
+        ventana_edicion.destroy()
+
+    # Botón de confirmación estilizado
+    confirmar_button = tk.Button(
+        marco, text=accion, bg=color_boton, fg="white", font=("Arial", 12, "bold"),
+        command=realizar_accion
+    )
+    confirmar_button.grid(row=len(campos), columnspan=2, pady=10)
 
 def abrir_usuarios(rol):   
     global tree 

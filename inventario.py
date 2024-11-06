@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 import mysql.connector
 import time
-
+import tkinter as tk
 # Función para mostrar la interfaz de inventario en el área central
 def mostrar_inventario(frame_central):
     
@@ -180,10 +180,10 @@ def mostrar_inventario(frame_central):
     tree.heading("Producto", text="Producto")
     tree.heading("Cantidad", text="Cantidad")
     tree.heading("Medida", text="Medida")
-    tree.column("ID", width=100)
-    tree.column("Producto", width=200)
-    tree.column("Cantidad", width=100)
-    tree.column("Medida", width=100)
+    tree.column("ID", width=80)
+    tree.column("Producto", width=180)
+    tree.column("Cantidad", width=250)
+    tree.column("Medida", width=190)
     tree.grid(row=2, column=0, columnspan=4, padx=20)
 
     # Crear barra de búsqueda
@@ -495,7 +495,7 @@ def abrir_inventario(rol):
     root.resizable(False, False)
 
     # Crear el frame del menú lateral
-    menu_lateral = Frame(root, bg="#333333", width=150)  # Fondo gris oscuro
+    menu_lateral = tk.Frame(root, bg="#333333", width=150)  # Fondo gris oscuro
     menu_lateral.pack(side="left", fill="y")
 
     # Crear el frame central donde se mostrará el contenido dinámico
@@ -525,17 +525,17 @@ def abrir_inventario(rol):
 
     # Crear los botones en el menú lateral
     for opcion in opciones_menu:
-        frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
+        frame_opcion = tk.Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
         frame_opcion.pack(fill="x", pady=1)
 
         # Icono y texto de la opción
-        etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
+        etiqueta = tk.Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
                          bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
         etiqueta.pack(fill="x")
 
         # Si hay una notificación, mostrarla como un punto rojo
         if opcion.get("notificacion"):
-            notificacion = Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
+            notificacion = tk.Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
             notificacion.pack(side="right", padx=5)
 
         # Agregar evento para seleccionar opción
@@ -555,8 +555,8 @@ def abrir_inventario(rol):
         boton.pack(side="left", padx=20)
 
     # Ejecutar el bucle principal de la aplicación
+    root.after(100, lambda: mostrar_inventario(frame_central))
     root.mainloop()
-
 
 
 def destruir(texto,root,rol) :
