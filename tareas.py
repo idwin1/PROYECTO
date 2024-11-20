@@ -288,7 +288,7 @@ def modificar_tarea(tabla):
     # Botón de confirmación
     btn_confirmar = tk.Button(
         marco, text="Modificar", bg=color_boton, fg="white", font=("Arial", 12, "bold"),
-        command=lambda: confirmar_modificacion(entradas, tabla, ventana_editar)
+        command=lambda: confirmar_modificacion(item_values[0],entradas, tabla, ventana_editar)
     )
     btn_confirmar.grid(row=len(campos), columnspan=2, pady=10)
     
@@ -307,7 +307,7 @@ def confirmar_agregar(entradas,tabla,ventana):
     ventana.destroy()
     cargar_tareas(tabla)
 
-def confirmar_modificacion(tarea_id, entradas, tabla,ventana):
+def confirmar_modificacion( tarea_id,entradas, tabla,ventana):
     from conexion_bd import conexion
     datos = {campo: entradas[campo].get() for campo in entradas}
     print(f"Modificando tarea {tarea_id} con datos:", datos)
