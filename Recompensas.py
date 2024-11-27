@@ -62,7 +62,7 @@ def validar_puntos(puntos):
 def abrir_ventana_edicion(accion):
     # Obtener el usuario seleccionado
     ventana_edicion = tk.Toplevel()
-    ventana_edicion.geometry("300x280")
+    ventana_edicion.geometry("400x320")
 
     # Colores y estilo
     color_fondo = "#f7f2f2"
@@ -91,9 +91,9 @@ def abrir_ventana_edicion(accion):
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=3, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=3, column=0, padx=10, pady=10)
-        fecha_entry = Entry(ventana_edicion)
-        fecha_entry.grid(row=4, column=1, padx=10, pady=10)
+        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=4, column=0, padx=10, pady=10)
+        puntos_entry = Entry(ventana_edicion)
+        puntos_entry.grid(row=4, column=1, padx=10, pady=10)
         
     elif accion == "Agregar Recompensa":
         ventana_edicion.title("Agregar Recompensa")
@@ -158,9 +158,9 @@ def abrir_ventana_edicion(accion):
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=4, column=1, padx=10, pady=10)
 
-        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=4, column=0, padx=10, pady=10)
-        fecha_entry = Entry(ventana_edicion)
-        fecha_entry.grid(row=5, column=1, padx=10, pady=10)
+        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=5, column=0, padx=10, pady=10)
+        puntos_entry = Entry(ventana_edicion)
+        puntos_entry.grid(row=5, column=1, padx=10, pady=10)
 
         # Cargar los datos del usuario seleccionado
         datos = tree.item(selected_item, "values")
@@ -278,7 +278,7 @@ def abrir_ventana_edicion(accion):
     # Botón para realizar la acción
     action_button = Button(ventana_edicion, text=accion, bg=color_boton,
                            fg="white", font=("Arial", 12, "bold"),command=realizar_accion)
-    action_button.grid(row=5, column=0, columnspan=2, pady=20)
+    action_button.grid(row=6, column=0, columnspan=2, pady=20)
 
 def eliminarRecompensa():
     selected_item = reward_tree.focus()
