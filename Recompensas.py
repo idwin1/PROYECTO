@@ -12,7 +12,7 @@ def cargarDatos():
     cursor = conn.cursor()
     
     # Consulta para obtener los datos
-    cursor.execute("SELECT id, nombre, telefono, correo, fecha_nacimiento FROM miembro")
+    cursor.execute("SELECT id, nombre, telefono, correo, fecha_nacimiento,puntos FROM miembro")
     resultados = cursor.fetchall()
 
     # Limpiar la tabla antes de insertar nuevos datos
@@ -48,6 +48,17 @@ def cargarRecompensas():
     cursor.close()
     conn.close()
 
+def validar_puntos(puntos):
+    try:
+        puntos = int(puntos)
+        if puntos < 0:
+            raise ValueError
+        return True
+    except ValueError:
+        messagebox.showerror("Error", "Los puntos deben ser un número entero positivo.")
+        return False
+
+
 def abrir_ventana_edicion(accion):
     # Obtener el usuario seleccionado
     ventana_edicion = tk.Toplevel()
@@ -79,6 +90,10 @@ def abrir_ventana_edicion(accion):
         Label(ventana_edicion, text="Fecha Nacimiento:",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=3, column=0, padx=10, pady=10)
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=3, column=1, padx=10, pady=10)
+
+        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=3, column=0, padx=10, pady=10)
+        fecha_entry = Entry(ventana_edicion)
+        fecha_entry.grid(row=4, column=1, padx=10, pady=10)
         
     elif accion == "Agregar Recompensa":
         ventana_edicion.title("Agregar Recompensa")
@@ -143,6 +158,10 @@ def abrir_ventana_edicion(accion):
         fecha_entry = Entry(ventana_edicion)
         fecha_entry.grid(row=4, column=1, padx=10, pady=10)
 
+        Label(ventana_edicion, text="Puntos",bg=color_fondo,fg=color_label, font=("Arial", 10, "bold")).grid(row=4, column=0, padx=10, pady=10)
+        fecha_entry = Entry(ventana_edicion)
+        fecha_entry.grid(row=5, column=1, padx=10, pady=10)
+
         # Cargar los datos del usuario seleccionado
         datos = tree.item(selected_item, "values")
         id_entry.insert(0, datos[0])
@@ -150,6 +169,7 @@ def abrir_ventana_edicion(accion):
         telefono_entry.insert(0, datos[2])
         correo_entry.insert(0, datos[3])
         fecha_entry.insert(0, datos[4])
+        puntos_entry.insert(0, datos[5])
         
         # Bloquear el campo de ID
         id_entry.config(state="readonly")
@@ -158,6 +178,7 @@ def abrir_ventana_edicion(accion):
             telefono_entry.config(state="readonly")
             correo_entry.config(state="readonly")
             fecha_entry.config(state="readonly")
+            puntos_entry.config(state="readonly")
 
     # Botón de acción en la ventana de edición
     def realizar_accion():
@@ -170,15 +191,22 @@ def abrir_ventana_edicion(accion):
             nuevo_telefono = telefono_entry.get()
             nuevo_correo = correo_entry.get()
             nueva_fecha = fecha_entry.get()
+            nuevos_puntos = puntos_entry.get()
+                
+            if not validar_puntos(nuevos_puntos):
+                return
 
-            cursor.execute("INSERT INTO miembro (nombre, telefono, correo, fecha_nacimiento) VALUES (%s, %s, %s, %s)",
-                           (nuevo_usuario, nuevo_telefono, nuevo_correo, nueva_fecha))
+            cursor.execute("INSERT INTO miembro (nombre, telefono, correo, fecha_nacimiento,puntos) VALUES (%s, %s, %s, %s, %s)",
+                           (nuevo_usuario, nuevo_telefono, nuevo_correo, nueva_fecha, nuevos_puntos))
             conn.commit()
             messagebox.showinfo("Éxito", "Usuario agregado correctamente.")
         
         elif accion == "Agregar Recompensa":
             nueva_recompensa = recompensa_entry.get()
             nuevos_puntos = puntos_entry.get()
+                
+            if not validar_puntos(nuevos_puntos):
+                return
 
             cursor.execute("INSERT INTO precompensas (recompensa, puntos) VALUES (%s, %s)",
                            (nueva_recompensa, nuevos_puntos))
@@ -192,9 +220,13 @@ def abrir_ventana_edicion(accion):
             telefono_actualizado = telefono_entry.get()
             correo_actualizado = correo_entry.get()
             fecha_actualizado = fecha_entry.get()
+            puntos_actualizados = puntos_entry.get()
+                
+            if not validar_puntos(puntos_actualizados):
+                return
 
-            cursor.execute("UPDATE miembro SET nombre=%s, telefono=%s, correo=%s, fecha_nacimiento=%s WHERE id=%s",
-                           (usuario_actualizado, telefono_actualizado, correo_actualizado, fecha_actualizado, id_usuario))
+            cursor.execute("UPDATE miembro SET nombre=%s, telefono=%s, correo=%s, fecha_nacimiento=%s,puntos=%s WHERE id=%s",
+                           (usuario_actualizado, telefono_actualizado, correo_actualizado, fecha_actualizado, puntos_actualizados,id_usuario))
             conn.commit()
             cargarDatos()
             messagebox.showinfo("Éxito", "Usuario actualizado correctamente.")
@@ -202,6 +234,9 @@ def abrir_ventana_edicion(accion):
         elif accion == "Actualizar Recompensas":
             recompensa_actualizada = recompensa_entry.get()
             puntos_actualizados = puntos_entry.get()
+                
+            if not validar_puntos(puntos_actualizados):
+                return
 
             # Obtener el ID de la recompensa seleccionada
             selected_item = reward_tree.focus()
@@ -351,7 +386,7 @@ def abrir_interfaz_Recompensas(rol):
     title_label = tk.Label(scroll_frame, text="Usuarios", bg="white", font=("Arial", 14))
     title_label.pack(pady=10)
 
-    columns = ("ID", "Nombre", "Telefono", "Correo", "Fecha de Nacimiento")
+    columns = ("ID", "Nombre", "Telefono", "Correo", "Fecha de Nacimiento", "Puntos")
     tree = ttk.Treeview(scroll_frame, columns=columns, show="headings", height=8)
     for col in columns:
         tree.heading(col, text=col)
