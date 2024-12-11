@@ -44,15 +44,18 @@ def abrir_pagina_principal(rol):
     for opcion in opciones_menu:
         frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
         frame_opcion.pack(fill="x", pady=1)
+        
         # Icono y texto de la opción
         etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
                          bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
         etiqueta.pack(fill="x")
         # Si hay una notificación, mostrarla como un punto rojo
+        
         if opcion.get("notificacion"):
             notificacion = Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
             notificacion.pack(side="right", padx=5)
-        # Agregar evento para seleccionar opción
+        
+        #  Agregar evento para seleccionar opción
         ventana = root
         etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
 

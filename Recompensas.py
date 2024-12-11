@@ -331,18 +331,6 @@ def abrir_interfaz_Recompensas(rol):
     root.iconbitmap("recompensa.ico")
     root.title("Recompensas")
 
-    # Centrar la ventana principal
-    screen_width = root.winfo_screenwidth()  # Ancho de la pantalla
-    screen_height = root.winfo_screenheight()  # Alto de la pantalla
-    window_width = 800  # Ancho de la ventana
-    window_height = 600  # Alto de la ventana
-
-    # Calculamos la posición X e Y para centrar la ventana
-    position_top = int(screen_height / 2 - window_height / 2)
-    position_right = int(screen_width / 2 - window_width / 2)
-
-    # Establecemos la geometría de la ventana
-    root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
     
      # Crear el frame del menú lateral
     menu_lateral = tk.Frame(root, bg="#333333", width=150)
@@ -386,7 +374,19 @@ def abrir_interfaz_Recompensas(rol):
         ventana = root
         etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
 
+    # Centrar la ventana principal
+    screen_width = root.winfo_screenwidth()  # Ancho de la pantalla
+    screen_height = root.winfo_screenheight()  # Alto de la pantalla
+    window_width = 800  # Ancho de la ventana
+    window_height = 600  # Alto de la ventana
 
+    # Calculamos la posición X e Y para centrar la ventana
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
+
+    # Establecemos la geometría de la ventana
+    root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+    
     # Crear el marco principal para la tabla de usuarios y los botones con scroll
     main_frame = tk.Frame(root, bg="white")
     main_frame.pack(side="right", fill="both", expand=True)

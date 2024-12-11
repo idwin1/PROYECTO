@@ -330,10 +330,7 @@ def abrir_inventario(rol):
     menu_lateral = tk.Frame(root, bg="#333333", width=150)  # Fondo gris oscuro
     menu_lateral.pack(side="left", fill="y")
 
-    # Crear el frame central donde se mostrará el contenido dinámico
-    frame_central = Frame(root, bg="#f0f0f0")  # Fondo gris claro para el frame central
-    frame_central.pack(side="right", expand=True, fill="both")
-
+    
     # Crear las opciones del menú lateral
     if rol == "A":
         opciones_menu = [
@@ -354,6 +351,9 @@ def abrir_inventario(rol):
         {"texto": "Punto ventas", "icono": "🗒️"},
         {"texto": "Cerrar sesión", "icono": "🗒️"}
     ]
+    # Crear el frame central donde se mostrará el contenido dinámico
+    frame_central = Frame(root, bg="#f0f0f0")  # Fondo gris claro para el frame central
+    frame_central.pack(side="right", expand=True, fill="both")
 
     # Crear los botones en el menú lateral
     for opcion in opciones_menu:
