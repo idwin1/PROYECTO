@@ -344,20 +344,48 @@ def abrir_interfaz_Recompensas(rol):
     # Establecemos la geometría de la ventana
     root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
     
-    # Crear el marco para el menú lateral
-    menu_frame = tk.Frame(root, bg="#333333", width=150)
-    menu_frame.pack(side="left", fill="y")
+     # Crear el frame del menú lateral
+    menu_lateral = tk.Frame(root, bg="#333333", width=150)
+    menu_lateral.pack(side="left", fill="y")
 
-    # Opciones del menú lateral
+    # Crear las opciones del menú
     if rol == "A":
-        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar sesión"]
+        opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Usuarios", "icono": "👤"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
+        ]
     else:
-        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas","Punto ventas","Cerrar sesión"]
+        opciones_menu = [
+        {"texto": "Recompensas", "icono": "★"},
+        {"texto": "Tareas", "icono": "📝"},
+        {"texto": "Inventario", "icono": "📦"},
+        {"texto": "Recetas", "icono": "🗒️"},
+        {"texto": "Punto ventas", "icono": "🗒️"},
+        {"texto": "Cerrar sesión", "icono": "🗒️"}
+    ]
 
-    for option in menu_options:
-        button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 10), anchor="w")
-        button.pack(fill="x", padx=10, pady=5)
-        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root, rol))
+
+    # Crear los botones en el menú lateral
+    for opcion in opciones_menu:
+        frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
+        frame_opcion.pack(fill="x", pady=1)
+        # Icono y texto de la opción
+        etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
+                         bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
+        etiqueta.pack(fill="x")
+        # Si hay una notificación, mostrarla como un punto rojo
+        if opcion.get("notificacion"):
+            notificacion = Label(frame_opcion, text="●", fg="#ff1744", bg="#333333", anchor="e")  # Punto de notificación en rojo
+            notificacion.pack(side="right", padx=5)
+        # Agregar evento para seleccionar opción
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana,rol))
+
 
     # Crear el marco principal para la tabla de usuarios y los botones con scroll
     main_frame = tk.Frame(root, bg="white")

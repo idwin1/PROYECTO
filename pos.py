@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, Frame, Label
 from conexion_bd import conexion
+import time
 
 
 def cargarProductos():
@@ -101,18 +102,42 @@ def abrir_puntoVentas(rol):
     root.geometry("1000x600")
     root.configure(bg="#F9F9F9")
 
-    menu_frame = tk.Frame(root, bg="#333333", width=150)
-    menu_frame.pack(side="left", fill="y")
+    # Crear el frame del menú lateral
+    menu_lateral = tk.Frame(root, bg="#333333", width=150)
+    menu_lateral.pack(side="left", fill="y")
 
+    # Crear las opciones del menú
     if rol == "A":
-        menu_options = ["Recompensas", "Usuarios", "Tareas", "Inventario", "Recetas", "Punto ventas", "Cerrar sesión"]
+        opciones_menu = [
+            {"texto": "Recompensas", "icono": "★"},
+            {"texto": "Usuarios", "icono": "👤"},
+            {"texto": "Tareas", "icono": "📝"},
+            {"texto": "Inventario", "icono": "📦"},
+            {"texto": "Recetas", "icono": "🗒️"},
+            {"texto": "Punto ventas", "icono": "🗒️"},
+            {"texto": "Cerrar sesión", "icono": "🗒️"}
+        ]
     else:
-        menu_options = ["Recompensas", "Tareas", "Inventario", "Recetas", "Punto ventas", "Cerrar sesión"]
+        opciones_menu = [
+            {"texto": "Recompensas", "icono": "★"},
+            {"texto": "Tareas", "icono": "📝"},
+            {"texto": "Inventario", "icono": "📦"},
+            {"texto": "Recetas", "icono": "🗒️"},
+            {"texto": "Punto ventas", "icono": "🗒️"},
+            {"texto": "Cerrar sesión", "icono": "🗒️"}
+        ]
 
-    for option in menu_options:
-        button = tk.Button(menu_frame, text=option, bg="#333333", fg="white", bd=0, font=("Arial", 12), anchor="w")
-        button.pack(fill="x", padx=10, pady=10)
-        button.bind("<Button-1>", lambda e, texto=option: destruir(texto, root, rol))
+    # Crear los botones en el menú lateral
+    for opcion in opciones_menu:
+        frame_opcion = Frame(menu_lateral, bg="#333333")  # Fondo gris oscuro para cada opción
+        frame_opcion.pack(fill="x", pady=1)
+        # Icono y texto de la opción
+        etiqueta = Label(frame_opcion, text=f"{opcion['icono']} {opcion['texto']}", anchor="w", padx=10, 
+                         bg="#333333", fg="#ffffff", font=("Arial", 10, "bold"))  # Texto en blanco y fuente negrita
+        etiqueta.pack(fill="x")
+        # Agregar evento para seleccionar opción
+        ventana = root
+        etiqueta.bind("<Button-1>", lambda e, texto=opcion['texto']: destruir(texto, ventana, rol))
 
     main_frame = tk.Frame(root, bg="white", padx=20, pady=20)
     main_frame.pack(side="right", fill="both", expand=True)
@@ -129,20 +154,9 @@ def abrir_puntoVentas(rol):
 
     tk.Label(productos_frame, text="Productos", bg="white", font=("Arial", 14, "bold")).pack(pady=10)
 
-    # Canvas para productos scrollables
-    productos_canvas = tk.Canvas(productos_frame, bg="white", highlightthickness=0)
-    productos_canvas.pack(side="left", fill="both", expand=True)
-
-    scrollbar = ttk.Scrollbar(productos_frame, orient="vertical", command=productos_canvas.yview)
-    scrollbar.pack(side="right", fill="y")
-
-    productos_scrollable_frame = tk.Frame(productos_canvas, bg="white")
-    productos_scrollable_frame.bind(
-        "<Configure>",
-        lambda e: productos_canvas.configure(scrollregion=productos_canvas.bbox("all"))
-    )
-    productos_canvas.create_window((0, 0), window=productos_scrollable_frame, anchor="nw")
-    productos_canvas.configure(yscrollcommand=scrollbar.set)
+    # Frame para productos scrollables
+    productos_scrollable_frame = tk.Frame(productos_frame, bg="white")
+    productos_scrollable_frame.pack(side="left", fill="both", expand=True)
 
     for prod, precio in productos:
         tk.Button(
@@ -154,26 +168,10 @@ def abrir_puntoVentas(rol):
             command=lambda p=prod: agregarProducto(p)
         ).pack(pady=2)
 
+    # Frame para el carrito
+    carrito_frame = tk.Frame(main_frame, bg="white", pady=10)
+    carrito_frame.pack(side="left", fill="both", expand=True, padx=10)
 
-    # Scrollable Frame
-    canvas = tk.Canvas(main_frame, bg="white")
-    scroll_y = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
-    scrollable_frame = tk.Frame(canvas, bg="white")
-
-    scrollable_frame.bind(
-        "<Configure>",
-        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-    )
-
-    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-    canvas.configure(yscrollcommand=scroll_y.set)
-
-    canvas.pack(side="left", fill="both", expand=True)
-    scroll_y.pack(side="right", fill="y")
-
-    carrito_frame = scrollable_frame
-
-    # Total directamente debajo de la tabla de productos
     total_frame = tk.Frame(main_frame, bg="white", pady=10)
     total_frame.pack(fill="x", side="bottom")
 
@@ -188,6 +186,10 @@ def abrir_puntoVentas(rol):
     root.mainloop()
 
 
-def destruir(texto, root, rol):
+def destruir(texto, root,rol):
     from funcionalidad import seleccionar_opcion
     root.destroy()
+    print("texto")
+    print(rol)
+    time.sleep(1)
+    seleccionar_opcion(texto,rol)

@@ -5,7 +5,6 @@ import ast
 import mysql.connector
 import os
 
-
 def abrir_login():
     # Crear ventana principal
     root = Tk()
@@ -70,19 +69,23 @@ def abrir_login():
 
     Frame(frame, width=295, height=2, bg='black').place(x=25, y=107)
 
-    # Campo de contraseña
-    def on_enter(e):
-        code.delete(0, "end")
+    # Mostrar el marcador de posición para "Contraseña"
+    def on_enter_password(e):
+        if code.get() == 'Contraseña':
+            code.delete(0, "end")
+            code.config(show='*')  # Cambiar a asteriscos cuando se empiece a escribir
 
-    def on_leave(e):
+    def on_leave_password(e):
         if code.get() == '':
             code.insert(0, 'Contraseña')
+            code.config(show='')  # Mostrar el texto como normal si está vacío
 
+    # Campo de contraseña con texto "Contraseña" como marcador de posición
     code = Entry(frame, width=25, fg='black', border=0, bg="white", font=('Microsoft YaHei UI Light', 11))
     code.place(x=30, y=150)
-    code.insert(0, 'Contraseña')
-    code.bind('<FocusIn>', on_enter)
-    code.bind('<FocusOut>', on_leave)
+    code.insert(0, 'Contraseña')  # Insertar "Contraseña" como texto inicial
+    code.bind('<FocusIn>', on_enter_password)
+    code.bind('<FocusOut>', on_leave_password)
 
     Frame(frame, width=295, height=2, bg='black').place(x=25, y=177)
 
@@ -126,7 +129,6 @@ def abrir_login():
     Button(frame, width=39, pady=7, text='Iniciar Sesión', fg='white', bg='#57a1f8', border=0, command=login).place(x=35, y=204)
 
     # Iniciar el bucle de la ventana
-
     root.mainloop()
 
 abrir_login()
