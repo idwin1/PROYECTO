@@ -124,20 +124,36 @@ def abrir_puntoVentas(rol):
     if not productos:
         return
 
-    productos_frame = tk.Frame(main_frame, bg="white")
-    productos_frame.pack(side="left", padx=10, pady=10)
+    productos_frame = tk.Frame(main_frame, bg="white", width=100)
+    productos_frame.pack(side="left", fill="both", padx=10, pady=10)
 
     tk.Label(productos_frame, text="Productos", bg="white", font=("Arial", 14, "bold")).pack(pady=10)
 
+    # Canvas para productos scrollables
+    productos_canvas = tk.Canvas(productos_frame, bg="white", highlightthickness=0)
+    productos_canvas.pack(side="left", fill="both", expand=True)
+
+    scrollbar = ttk.Scrollbar(productos_frame, orient="vertical", command=productos_canvas.yview)
+    scrollbar.pack(side="right", fill="y")
+
+    productos_scrollable_frame = tk.Frame(productos_canvas, bg="white")
+    productos_scrollable_frame.bind(
+        "<Configure>",
+        lambda e: productos_canvas.configure(scrollregion=productos_canvas.bbox("all"))
+    )
+    productos_canvas.create_window((0, 0), window=productos_scrollable_frame, anchor="nw")
+    productos_canvas.configure(yscrollcommand=scrollbar.set)
+
     for prod, precio in productos:
         tk.Button(
-            productos_frame,
+            productos_scrollable_frame,
             text=f"{prod}\n${precio:.2f}",
             font=("Arial", 12),
             width=20,
             height=2,
             command=lambda p=prod: agregarProducto(p)
-        ).pack(pady=5)
+        ).pack(pady=2)
+
 
     # Scrollable Frame
     canvas = tk.Canvas(main_frame, bg="white")
